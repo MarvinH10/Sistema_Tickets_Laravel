@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,6 +22,4 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
-
-Route::get('google', [LoginController::class, 'redirigirGoogle'])->name('auth.google');
-Route::get('google/callback', [LoginController::class, 'manejarGoogleCallback']);
+require __DIR__ . '/auth.php';
