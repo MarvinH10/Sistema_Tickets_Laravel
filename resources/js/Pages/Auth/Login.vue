@@ -47,7 +47,7 @@ const submit = () => {
 
         <div class="text-center mb-4">
             <!--ACA VAMOS A AUTENTICARNOS CON NUESTRA CUENTA DE GOOGLE FALTA CONFIGURAR-->
-            <Link :href="route('login')"
+            <Link :href="route('auth.google')"
                 class="inline-flex w-full pl-32 px-4 py-2 bg-white border border-gray-300 font-semibold text-xs text-gray-800 hover:bg-gray-100 focus:bg-gray-100">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
                 <path fill="#fbc02d"
