@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -23,4 +24,14 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/ticket', [TicketController::class, 'index'])->name('ticket');
+});
+
 require __DIR__ . '/auth.php';
+
+
