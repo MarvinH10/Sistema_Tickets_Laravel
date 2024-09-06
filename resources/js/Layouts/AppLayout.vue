@@ -80,6 +80,24 @@ defineProps({
                             />
                             <span v-if="mostrarTextoSidebar">Dashboard</span>
                         </NavLink>
+                        <NavLink
+                            :href="route('ticket')"
+                            :active="route().current('ticket')"
+                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            :class="{
+                                'bg-gray-200 text-gray-800 border-none':
+                                    route().current('ticket'),
+                                'text-gray-600 hover:bg-gray-100':
+                                    !route().current('ticket'),
+                                'justify-center': !abrirSidebar,
+                            }"
+                        >
+                            <font-awesome-icon
+                                icon="tachometer-alt"
+                                class="text-lg"
+                            />
+                            <span v-if="mostrarTextoSidebar">Ticket</span>
+                        </NavLink>
                     </div>
                 </div>
             </nav>
