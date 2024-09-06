@@ -17,10 +17,19 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(faTachometerAlt, faChevronDown, faChevronUp);
 
 const abrirSidebar = ref(true);
+const mostrarTextoSidebar = ref(true);
 const abrirDropdown = ref(false);
 
 const interactuarSidebar = () => {
     abrirSidebar.value = !abrirSidebar.value;
+
+    if (abrirSidebar.value) {
+        setTimeout(() => {
+            mostrarTextoSidebar.value = true;
+        }, 190);
+    } else {
+        mostrarTextoSidebar.value = false;
+    }
 };
 
 const interactuarDropdown = () => {
@@ -43,8 +52,8 @@ defineProps({
         <Banner />
         <div class="flex min-h-screen bg-gray-100">
             <nav
-                class="transition-all duration-300 ease-in-out bg-white border-r border-gray-100"
-                :class="abrirSidebar ? 'w-64' : 'w-16'"
+                class="transition-all duration-[500ms] ease-in-out bg-white border-r border-gray-100"
+                :class="abrirSidebar ? 'w-40' : 'w-16'"
             >
                 <div class="w-full py-4">
                     <div class="flex items-center justify-center mb-4 shrink-0">
@@ -69,61 +78,7 @@ defineProps({
                                 icon="tachometer-alt"
                                 class="text-lg"
                             />
-                            <span v-if="abrirSidebar">Dashboard</span>
-                        </NavLink>
-                        <NavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
-                            :class="{
-                                'bg-gray-200 text-gray-800 border-none':
-                                    route().current('dashboard'),
-                                'text-gray-600 hover:bg-gray-100':
-                                    !route().current('dashboard'),
-                                'justify-center': !abrirSidebar,
-                            }"
-                        >
-                            <font-awesome-icon
-                                icon="tachometer-alt"
-                                class="text-lg"
-                            />
-                            <span v-if="abrirSidebar">Dashboard</span>
-                        </NavLink>
-                        <NavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
-                            :class="{
-                                'bg-gray-200 text-gray-800 border-none':
-                                    route().current('dashboard'),
-                                'text-gray-600 hover:bg-gray-100':
-                                    !route().current('dashboard'),
-                                'justify-center': !abrirSidebar,
-                            }"
-                        >
-                            <font-awesome-icon
-                                icon="tachometer-alt"
-                                class="text-lg"
-                            />
-                            <span v-if="abrirSidebar">Dashboard</span>
-                        </NavLink>
-                        <NavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
-                            :class="{
-                                'bg-gray-200 text-gray-800 border-none':
-                                    route().current('dashboard'),
-                                'text-gray-600 hover:bg-gray-100':
-                                    !route().current('dashboard'),
-                                'justify-center': !abrirSidebar,
-                            }"
-                        >
-                            <font-awesome-icon
-                                icon="tachometer-alt"
-                                class="text-lg"
-                            />
-                            <span v-if="abrirSidebar">Dashboard</span>
+                            <span v-if="mostrarTextoSidebar">Dashboard</span>
                         </NavLink>
                     </div>
                 </div>
@@ -174,7 +129,7 @@ defineProps({
                                             "
                                             :alt="$page.props.auth.user.name"
                                         />
-                                        <span class="ml-2">
+                                        <span class="hidden ml-2 lg:block">
                                             {{ $page.props.auth.user.name }}
                                         </span>
                                         <font-awesome-icon
@@ -194,7 +149,7 @@ defineProps({
                                         :href="route('api-tokens.index')"
                                         >API Tokens</DropdownLink
                                     >
-                                    <div class="border-t border-gray-200" />
+                                    <div class="border-t border-gray-200"></div>
                                     <form @submit.prevent="logout">
                                         <DropdownLink as="button"
                                             >Cerrar sesión</DropdownLink
@@ -210,7 +165,7 @@ defineProps({
                         <slot name="header" />
                     </div>
                 </header>
-                <main>
+                <main class="flex-1 p-6">
                     <slot />
                 </main>
             </div>
