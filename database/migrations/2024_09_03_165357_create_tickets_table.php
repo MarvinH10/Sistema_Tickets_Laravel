@@ -16,10 +16,11 @@ return new class extends Migration
             $table->foreignId('use_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('cat_id')->constrained('categorias')->cascadeOnDelete();
             $table->foreignId('pri_id')->constrained('prioridads')->cascadeOnDelete();
-            $table->foreignId('est_id')->constrained('estados')->cascadeOnDelete();
-            $table->foreignId('aul_id')->constrained('aulas')->cascadeOnDelete();
+            $table->foreignId('pab_id')->constrained('pabellons')->cascadeOnDelete();
             $table->string('tic_titulo');
             $table->string('tic_descripcion');
+            $table->string('tic_archivo');
+            $table->string('tic_estado');
             $table->boolean('tic_activo')->default(true);
             $table->timestamps();
         });
