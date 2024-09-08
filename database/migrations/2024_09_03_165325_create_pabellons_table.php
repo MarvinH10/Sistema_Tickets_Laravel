@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categorias', function (Blueprint $table) {
+        Schema::create('pabellons', function (Blueprint $table) {
             $table->id();
-            $table->string('cat_nombre');
-            $table->boolean('cat_activo')->default(true);
+            $table->foreignId('sed_id')->constrained('sedes')->cascadeOnDelete();
+            $table->string('pab_nombre');
+            $table->boolean('pab_activo')->default(true);
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categorias');
+        Schema::dropIfExists('pabellons');
     }
 };
