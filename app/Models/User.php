@@ -27,6 +27,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'sed_id',
+        'rol_id',
     ];
 
     /**
@@ -61,5 +63,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            if (empty($user->rol_id)) {
+                $user->rol_id = Rol::where('rol_nombre', 'Usuario')->first()->id;
+            }
+        });
     }
 }

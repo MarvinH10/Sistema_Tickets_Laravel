@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('aulas', function (Blueprint $table) {
+        Schema::create('reportes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pab_id')->constrained('pabellons')->cascadeOnDelete();
-            $table->string('aul_numero');
-            $table->boolean('aul_activo')->default(true);
+            $table->foreignId('tic_id')->constrained('tickets');
+            $table->foreignId('use_id')->constrained('users');
+            $table->string('rep_descripcion');
+            $table->boolean('rep_activo')->default(true);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('aulas');
+        Schema::dropIfExists('reportes');
     }
 };

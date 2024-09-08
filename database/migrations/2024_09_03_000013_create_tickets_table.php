@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('use_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('cat_id')->constrained('categorias')->cascadeOnDelete();
-            $table->foreignId('pri_id')->constrained('prioridads')->cascadeOnDelete();
-            $table->foreignId('pab_id')->constrained('pabellons')->cascadeOnDelete();
+            $table->foreignId('use_id')->constrained('users');
+            $table->foreignId('cat_id')->constrained('categorias');
+            $table->foreignId('pri_id')->constrained('prioridads');
+            $table->foreignId('pab_id')->constrained('pabellons');
             $table->string('tic_titulo');
-            $table->string('tic_descripcion');
+            $table->text('tic_descripcion');
             $table->string('tic_archivo');
             $table->string('tic_estado');
             $table->boolean('tic_activo')->default(true);
