@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sede extends Model
+class Rol extends Model
 {
     use HasFactory;
 
-    public $fillable = ['sed_nombre', 'sed_activo'];
+    public $fillable = ['rol_nombre', 'rol_activo'];
 }

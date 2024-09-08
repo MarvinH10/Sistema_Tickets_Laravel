@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pabellons', function (Blueprint $table) {
+        Schema::create('asignados', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sed_id')->constrained('sedes')->cascadeOnDelete();
-            $table->string('pab_nombre');
-            $table->boolean('pab_activo')->default(true);
+            $table->foreignId('tic_id')->constrained('tickets');
+            $table->foreignId('use_id')->constrained('users');
+            $table->boolean('es_asignado')->default(true);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pabellons');
+        Schema::dropIfExists('asignados');
     }
 };
