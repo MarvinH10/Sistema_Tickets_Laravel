@@ -125,16 +125,15 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
+                <InputLabel for="sed_id" value="Selecciona una Sede" />
                 <Select
                     id="sed_id"
-                    name="sed_id"
                     v-model="form.sed_id"
                     :options="sedes"
-                    label="Selecciona una Sede"
-                    placeholder="Selecciona una Sede"
-                    :required="true"
-                    :error="form.errors.sed_id"
+                    placeholder="Por favor seleccione una sede"
+                    required
                 />
+                <InputError class="mt-2" :message="form.errors.sed_id" />
             </div>
 
             <div

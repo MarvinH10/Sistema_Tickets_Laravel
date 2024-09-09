@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'Marvin Campos Deza',
-            'email' => '2019110448@udh.edu.pe',
+            'email' => 'marvinhectorcamposdeza@gmail.com',
             'password' => Hash::make('987654321'),
             'telefono' => '987654321',
             'activo' => true,
