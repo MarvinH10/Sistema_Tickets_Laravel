@@ -15,7 +15,7 @@
       <!-- Vista de Cards -->
       <div v-for="ticket in tickets" :key="ticket.id"
         class="relative bg-white shadow-lg rounded-lg p-4 transition-transform transform hover:scale-105">
-        <!-- Estado en la parte superior derecha -->
+        <!-- Estado en la parte superior derecha -->|
         <div class="absolute top-2 right-2 bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">
           {{ ticket.estado }}
         </div>
