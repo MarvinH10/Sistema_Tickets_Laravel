@@ -8,6 +8,9 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+    faTicketSimple,
+    faTicket,
+    faUser,
     faTachometerAlt,
     faChevronDown,
     faChevronUp,
@@ -15,7 +18,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+<<<<<<< HEAD
 library.add(faTachometerAlt, faChevronDown, faChevronUp, faTicket);
+=======
+library.add(faTicketSimple,faTicket,faUser,faTachometerAlt, faChevronDown, faChevronUp);
+>>>>>>> 02c04c7e1b7eda62401c1fb217a6650ef6bbeac6
 
 const abrirSidebar = ref(true);
 const mostrarTextoSidebar = ref(true);
@@ -102,7 +109,14 @@ defineProps({
                                 'justify-center': !abrirSidebar,
                             }"
                         >
+<<<<<<< HEAD
                             <font-awesome-icon icon="ticket" class="text-lg" />
+=======
+                            <font-awesome-icon
+                                icon="ticket"
+                                class="text-lg"
+                            />
+>>>>>>> 02c04c7e1b7eda62401c1fb217a6650ef6bbeac6
                             <span v-if="mostrarTextoSidebar">Ticket</span>
                         </NavLink>
                     </div>
