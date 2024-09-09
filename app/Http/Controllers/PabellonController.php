@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pabellon;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PabellonController extends Controller
 {
@@ -12,7 +13,7 @@ class PabellonController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Ticket/Pabellon');
     }
 
     /**
