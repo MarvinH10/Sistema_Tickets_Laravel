@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
@@ -11,10 +11,11 @@ import {
     faTachometerAlt,
     faChevronDown,
     faChevronUp,
+    faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faTachometerAlt, faChevronDown, faChevronUp);
+library.add(faTachometerAlt, faChevronDown, faChevronUp, faTicket);
 
 const abrirSidebar = ref(true);
 const mostrarTextoSidebar = ref(true);
@@ -30,6 +31,7 @@ const interactuarSidebar = () => {
     } else {
         mostrarTextoSidebar.value = false;
     }
+    localStorage.setItem("sidebarOpen", abrirSidebar.value);
 };
 
 const interactuarDropdown = () => {
@@ -39,6 +41,14 @@ const interactuarDropdown = () => {
 const logout = () => {
     router.post(route("logout"));
 };
+
+onMounted(() => {
+    const storedSidebarState = localStorage.getItem("sidebarOpen");
+    if (storedSidebarState !== null) {
+        abrirSidebar.value = JSON.parse(storedSidebarState);
+        mostrarTextoSidebar.value = abrirSidebar.value;
+    }
+});
 
 defineProps({
     title: String,
@@ -92,10 +102,7 @@ defineProps({
                                 'justify-center': !abrirSidebar,
                             }"
                         >
-                            <font-awesome-icon
-                                icon="tachometer-alt"
-                                class="text-lg"
-                            />
+                            <font-awesome-icon icon="ticket" class="text-lg" />
                             <span v-if="mostrarTextoSidebar">Ticket</span>
                         </NavLink>
                     </div>
