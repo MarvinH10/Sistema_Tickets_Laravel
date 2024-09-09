@@ -31,5 +31,3 @@ Route::middleware([
 ])->group(function () {
     Route::get('/ticket', [TicketController::class, 'index'])->name('ticket');
 });
-
-require __DIR__ . '/auth.php';
