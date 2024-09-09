@@ -24,9 +24,9 @@
         <!-- Estado en la parte superior derecha con colores -->
         <div class="absolute top-2 right-2 px-2 py-1 rounded text-xs"
              :class="{
-               'bg-green-200 text-green-800': ticket.estado === 'Abierto',
-               'bg-yellow-200 text-yellow-800': ticket.estado === 'En proceso',
-               'bg-red-200 text-red-800': ticket.estado === 'Cerrado'
+               'bg-green-700 text-white': ticket.estado === 'Abierto',
+               'bg-yellow-700 text-white': ticket.estado === 'En proceso',
+               'bg-red-700 text-white': ticket.estado === 'Cerrado'
              }">
           {{ ticket.estado }}
         </div>
@@ -72,9 +72,9 @@
             <td class="px-4 py-2 border">{{ ticket.prioridad }}</td>
             <td class="px-4 py-2 border">
               <span :class="{
-                     'text-green-800': ticket.estado === 'Abierto',
-                     'text-yellow-800': ticket.estado === 'En proceso',
-                     'text-red-800': ticket.estado === 'Cerrado'
+                     'bg-green text-black': ticket.estado === 'Abierto',
+                     'bg-yellow text-black': ticket.estado === 'En proceso',
+                     'bg-red text-black': ticket.estado === 'Cerrado'
                    }">{{ ticket.estado }}
               </span>
             </td>
@@ -166,6 +166,55 @@ export default {
       },
       soporteAsignado: '',
       tickets: [
+        {
+          id: 1,
+          tic_titulo: 'Problema con el servidor',
+          tic_descripcion: 'El servidor principal no responde correctamente.',
+          prioridad: 'Alta',
+          estado: 'Abierto',
+        },
+        {
+          id: 1,
+          tic_titulo: 'Problema con el servidor',
+          tic_descripcion: 'El servidor principal no responde correctamente.',
+          prioridad: 'Alta',
+          estado: 'Abierto',
+        },
+        {
+          id: 1,
+          tic_titulo: 'Problema con el servidor',
+          tic_descripcion: 'El servidor principal no responde correctamente.',
+          prioridad: 'Alta',
+          estado: 'Abierto',
+        },
+        {
+          id: 1,
+          tic_titulo: 'Problema con el servidor',
+          tic_descripcion: 'El servidor principal no responde correctamente.',
+          prioridad: 'Alta',
+          estado: 'Abierto',
+        },
+        {
+          id: 1,
+          tic_titulo: 'Problema con el servidor',
+          tic_descripcion: 'El servidor principal no responde correctamente.',
+          prioridad: 'Alta',
+          estado: 'Abierto',
+        },
+        {
+          id: 1,
+          tic_titulo: 'Problema con el servidor',
+          tic_descripcion: 'El servidor principal no responde correctamente.',
+          prioridad: 'Alta',
+          estado: 'Abierto',
+        },
+        {
+          id: 1,
+          tic_titulo: 'Problema con el servidor',
+          tic_descripcion: 'El servidor principal no responde correctamente.',
+          prioridad: 'Alta',
+          estado: 'Abierto',
+        },
         {
           id: 1,
           tic_titulo: 'Problema con el servidor',

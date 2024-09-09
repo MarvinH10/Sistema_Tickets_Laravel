@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AulaController;
+use App\Http\Controllers\PabellonController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,4 +32,20 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/ticket', [TicketController::class, 'index'])->name('ticket');
+});
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/pabellon', [PabellonController::class, 'index'])->name('pabellon');
+});
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/aula', [AulaController::class, 'index'])->name('aula');
 });

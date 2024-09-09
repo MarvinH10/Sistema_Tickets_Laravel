@@ -101,6 +101,42 @@ defineProps({
                             />
                             <span v-if="mostrarTextoSidebar">Ticket</span>
                         </NavLink>
+                        <NavLink
+                            :href="route('aula')"
+                            :active="route().current('aula')"
+                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            :class="{
+                                'bg-gray-200 text-gray-800 border-none':
+                                    route().current('aula'),
+                                'text-gray-600 hover:bg-gray-100':
+                                    !route().current('aula'),
+                                'justify-center': !abrirSidebar,
+                            }"
+                        >
+                            <font-awesome-icon
+                                icon="ticket"
+                                class="text-lg"
+                            />
+                            <span v-if="mostrarTextoSidebar">Aulas</span>
+                        </NavLink>
+                        <NavLink
+                            :href="route('pabellon')"
+                            :active="route().current('pabellon')"
+                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            :class="{
+                                'bg-gray-200 text-gray-800 border-none':
+                                    route().current('pabellon'),
+                                'text-gray-600 hover:bg-gray-100':
+                                    !route().current('pabellon'),
+                                'justify-center': !abrirSidebar,
+                            }"
+                        >
+                            <font-awesome-icon
+                                icon="ticket"
+                                class="text-lg"
+                            />
+                            <span v-if="mostrarTextoSidebar">Pabellones</span>
+                        </NavLink>
                     </div>
                 </div>
             </nav>
