@@ -53,15 +53,14 @@ function redirectToGoogle() {
             </Link>
         </div>
 
-        <div class="mb-4 text-center">
+        <div class="text-center">
             <button
                 @click="redirectToGoogle"
-                class="inline-flex w-full px-4 py-2 pl-32 text-sm font-semibold text-gray-800 bg-white border border-gray-300 hover:bg-gray-100 focus:bg-gray-100"
+                class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-semibold text-gray-800 bg-white border border-gray-300 hover:bg-gray-100 focus:bg-gray-100"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    x="0px"
-                    y="0px"
+                    class="mr-2"
                     width="20"
                     height="20"
                     viewBox="0 0 48 48"
@@ -81,8 +80,9 @@ function redirectToGoogle() {
                     <path
                         fill="#1565c0"
                         d="M43.611,20.083L43.595,20L42,20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
-                    ></path></svg
-                >&ensp;Continuar con Google
+                    ></path>
+                </svg>
+                <span>Continuar con Google</span>
             </button>
         </div>
         <div class="flex items-center my-4">
@@ -93,6 +93,13 @@ function redirectToGoogle() {
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
+        </div>
+
+        <div
+            v-if="$page.props.flash && $page.props.flash.google_user"
+            class="mb-4 text-sm text-red-600"
+        >
+            {{ $page.props.flash.google_user }}
         </div>
 
         <form @submit.prevent="submit">
