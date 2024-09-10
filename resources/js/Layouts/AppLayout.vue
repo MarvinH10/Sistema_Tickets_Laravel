@@ -55,8 +55,8 @@ defineProps({
         <Banner />
         <div class="flex min-h-screen bg-gray-100">
             <nav
-                class="transition-all duration-[500ms] ease-in-out bg-white border-r border-gray-100"
-                :class="abrirSidebar ? 'w-40' : 'w-16'"
+                class="transition-all duration-[200ms] ease-in-out bg-white border-r border-gray-100"
+                :class="abrirSidebar ? 'w-60' : 'w-30'"
             >
                 <div class="w-full py-4">
                     <div class="flex items-center justify-center mb-4 shrink-0">
@@ -136,6 +136,42 @@ defineProps({
                                 class="text-lg"
                             />
                             <span v-if="mostrarTextoSidebar">Pabellones</span>
+                        </NavLink>
+                        <NavLink
+                            :href="route('sedes')"
+                            :active="route().current('sedes')"
+                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            :class="{
+                                'bg-gray-200 text-gray-800 border-none':
+                                    route().current('sedes'),
+                                'text-gray-600 hover:bg-gray-100':
+                                    !route().current('sedes'),
+                                'justify-center': !abrirSidebar,
+                            }"
+                        >
+                            <font-awesome-icon
+                                icon="tachometer-alt"
+                                class="text-lg"
+                            />
+                            <span v-if="mostrarTextoSidebar">Sedes</span>
+                        </NavLink>
+                        <NavLink
+                            :href="route('user')"
+                            :active="route().current('user')"
+                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            :class="{
+                                'bg-gray-200 text-gray-800 border-none':
+                                    route().current('user'),
+                                'text-gray-600 hover:bg-gray-100':
+                                    !route().current('user'),
+                                'justify-center': !abrirSidebar,
+                            }"
+                        >
+                            <font-awesome-icon
+                                icon="tachometer-alt"
+                                class="text-lg"
+                            />
+                            <span v-if="mostrarTextoSidebar">user</span>
                         </NavLink>
                     </div>
                 </div>
