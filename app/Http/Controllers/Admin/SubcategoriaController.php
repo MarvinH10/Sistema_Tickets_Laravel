@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Categoria;
+use App\Http\Controllers\Controller;
+use App\Models\Subcategoria;
 use Illuminate\Http\Request;
 
-class CategoriaController extends Controller
+class SubcategoriaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class CategoriaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Categoria $categoria)
+    public function show(Subcategoria $subcategoria)
     {
         //
     }
@@ -42,7 +43,7 @@ class CategoriaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Categoria $categoria)
+    public function edit(Subcategoria $subcategoria)
     {
         //
     }
@@ -50,7 +51,7 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categoria $categoria)
+    public function update(Request $request, Subcategoria $subcategoria)
     {
         //
     }
@@ -58,7 +59,7 @@ class CategoriaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categoria $categoria)
+    public function destroy(Subcategoria $subcategoria)
     {
         //
     }

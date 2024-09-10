@@ -1,116 +1,33 @@
-<script>
-export default {
-  data() {
-    return {
-      isCardView: true,
-      mostrarModalCrearSede: false,
-      mostrarModalDetalles: false,
-      mostrarModalEditar: false,
-      sedeSeleccionada: {},
-      nuevaSede: {
-        nombre: '',
-        direccion: '',
-        telefono: '',
-        correo: '',
-        ciudad: '',
-        codigoPostal: '',
-      },
-      searchQuery: '', // Barra de búsqueda
-      sedes: [
-        {
-          id: 1,
-          nombre: 'Sede Central',
-          direccion: 'Av. Principal 123',
-          telefono: '123-456-7890',
-          correo: 'central@sede.com',
-          ciudad: 'Lima',
-          codigoPostal: '15001',
-        },
-        {
-          id: 2,
-          nombre: 'Sede Norte',
-          direccion: 'Av. Norte 456',
-          telefono: '987-654-3210',
-          correo: 'norte@sede.com',
-          ciudad: 'Trujillo',
-          codigoPostal: '13001',
-        },
-        {
-          id: 3,
-          nombre: 'Sede Sur',
-          direccion: 'Av. Sur 789',
-          telefono: '456-789-1230',
-          correo: 'sur@sede.com',
-          ciudad: 'Arequipa',
-          codigoPostal: '04001',
-        },
-      ],
-    };
-  },
-  computed: {
-    filteredSedes() {
-      return this.sedes.filter(sede => {
-        const search = this.searchQuery.toLowerCase();
-        return (
-          sede.nombre.toLowerCase().includes(search) ||
-          sede.direccion.toLowerCase().includes(search) ||
-          sede.ciudad.toLowerCase().includes(search) ||
-          sede.telefono.includes(search) ||
-          sede.correo.toLowerCase().includes(search)
-        );
-      });
-    }
-  },
-  methods: {
-    toggleView() {
-      this.isCardView = !this.isCardView;
-    },
+<script setup>
+import { ref, onMounted } from "vue";
 
-    showCrearSedeModal() {
-      this.mostrarModalCrearSede = true;
-    },
+const sedes = ref([]);
 
-    cerrarCrearSedeModal() {
-      this.mostrarModalCrearSede = false;
-    },
-
-    crearSede() {
-      const nueva = {
-        id: this.sedes.length + 1,
-        ...this.nuevaSede
-      };
-      this.sedes.push(nueva);
-      this.cerrarCrearSedeModal();
-    },
-
-    showDetallesModal(sede) {
-      this.sedeSeleccionada = sede;
-      this.mostrarModalDetalles = true;
-    },
-
-    cerrarDetallesModal() {
-      this.mostrarModalDetalles = false;
-    },
-
-    showEditarModal(sede) {
-      this.sedeSeleccionada = sede;
-      this.mostrarModalEditar = true;
-      this.nuevaSede = { ...sede };
-    },
-
-    cerrarEditarModal() {
-      this.mostrarModalEditar = false;
-    },
-
-    editarSede() {
-      const index = this.sedes.findIndex(sede => sede.id === this.nuevaSede.id);
-      if (index !== -1) {
-        this.sedes[index] = { ...this.nuevaSede };
-      }
-      this.cerrarEditarModal();
-    },
-  },
+const validatePhoneNumber = (telefono) => {
+  const phone = telefono.toString();
+  return phone.startsWith("+51") ? phone : `+51${phone}`;
 };
+
+const fetchSedes = async () => {
+  try {
+    const response = await fetch("/api/sedes");
+    const data = await response.json();
+    sedes.value = data.map((sede) => ({
+      id: sede.id,
+      nombre: sede.sed_nombre,
+      direccion: sede.sed_direccion,
+      ciudad: sede.sed_ciudad,
+      telefono: validatePhoneNumber(sede.sed_telefono),
+      correo: sede.sed_correo
+    }));
+  } catch (error) {
+    console.error("Error al cargar las sedes:", error);
+  }
+};
+
+onMounted(() => {
+  fetchSedes();
+});
 </script>
 
 <template>
@@ -119,12 +36,8 @@ export default {
 
     <!-- Barra de búsqueda -->
     <div class="mb-4">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="Buscar por nombre, dirección, ciudad, teléfono o correo..."
-        class="border p-2 w-full rounded"
-      />
+      <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, dirección, ciudad, teléfono o correo..."
+        class="border p-2 w-full rounded" />
     </div>
 
     <div class="mb-4 flex justify-end">
@@ -142,17 +55,15 @@ export default {
     <div v-if="isCardView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="sede in filteredSedes" :key="sede.id"
         class="relative bg-white shadow-lg rounded-lg p-4 transition-transform transform hover:scale-105">
-        <h2 class="text-xl font-semibold">{{ sede.nombre }}</h2>
-        <p class="text-gray-600">{{ sede.direccion }}</p>
-        <p class="text-gray-600">Ciudad: {{ sede.ciudad }}</p>
-        <p class="text-gray-600">Teléfono: {{ sede.telefono }}</p>
-        <p class="text-gray-600">Correo: {{ sede.correo }}</p>
+        <h2 class="text-xl font-semibold">{{ sede.sed_nombre }}</h2>
+        <p class="text-gray-600">{{ sede.sed_direccion }}</p>
+        <p class="text-gray-600">Ciudad: {{ sede.sed_ciudad }}</p>
+        <p class="text-gray-600">Teléfono: {{ sede.sed_telefono }}</p>
         <div class="mt-4 flex justify-between items-center space-x-2">
           <button @click="showDetallesModal(sede)" class="text-blue-500 hover:text-blue-700 transition duration-300">
             <i class="fas fa-eye"></i> <!-- Icono de ojo para ver detalles -->
           </button>
-          <button @click="showEditarModal(sede)"
-            class="text-green-500 hover:text-green-700 transition duration-300">
+          <button @click="showEditarModal(sede)" class="text-green-500 hover:text-green-700 transition duration-300">
             <i class="fas fa-edit"></i> <!-- Icono de editar -->
           </button>
         </div>
@@ -168,17 +79,15 @@ export default {
             <th class="px-4 py-2 border">Dirección</th>
             <th class="px-4 py-2 border">Ciudad</th>
             <th class="px-4 py-2 border">Teléfono</th>
-            <th class="px-4 py-2 border">Correo</th>
             <th class="px-4 py-2 border">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="sede in filteredSedes" :key="sede.id" class="border-t">
+          <tr v-for="sede in sedes" :key="sede.id" class="border-t">
             <td class="px-4 py-2 border">{{ sede.nombre }}</td>
             <td class="px-4 py-2 border">{{ sede.direccion }}</td>
             <td class="px-4 py-2 border">{{ sede.ciudad }}</td>
             <td class="px-4 py-2 border">{{ sede.telefono }}</td>
-            <td class="px-4 py-2 border">{{ sede.correo }}</td>
             <td class="px-4 py-2 border flex justify-between space-x-2">
               <button @click="showDetallesModal(sede)"
                 class="text-blue-500 hover:text-blue-700 transition duration-300">

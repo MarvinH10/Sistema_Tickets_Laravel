@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('sedes', function (Blueprint $table) {
             $table->id();
             $table->string('sed_nombre');
+            $table->string('sed_direccion');
+            $table->string('sed_ciudad');
+            $table->string('sed_telefono');
             $table->boolean('sed_activo')->default(true);
             $table->timestamps();
         });

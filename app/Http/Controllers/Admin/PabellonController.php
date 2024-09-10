@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Ticket;
+use App\Http\Controllers\Controller;
+use App\Models\Pabellon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-class TicketController extends Controller
+
+class PabellonController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Admin/Ticket');
+        return Inertia::render('Admin/Pabellon');
     }
 
     /**
@@ -34,7 +36,7 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(Pabellon $pabellon)
     {
         //
     }
@@ -42,7 +44,7 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ticket $ticket)
+    public function edit(Pabellon $pabellon)
     {
         //
     }
@@ -50,7 +52,7 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(Request $request, Pabellon $pabellon)
     {
         //
     }
@@ -58,7 +60,7 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ticket $ticket)
+    public function destroy(Pabellon $pabellon)
     {
         //
     }

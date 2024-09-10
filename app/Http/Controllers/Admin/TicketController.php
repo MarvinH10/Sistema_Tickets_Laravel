@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Rol;
+use App\Http\Controllers\Controller;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
-
-class RolController extends Controller
+use Inertia\Inertia;
+class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render('Admin/Ticket');
     }
 
     /**
@@ -34,7 +35,7 @@ class RolController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Rol $rol)
+    public function show(Ticket $ticket)
     {
         //
     }
@@ -42,7 +43,7 @@ class RolController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Rol $rol)
+    public function edit(Ticket $ticket)
     {
         //
     }
@@ -50,7 +51,7 @@ class RolController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Rol $rol)
+    public function update(Request $request, Ticket $ticket)
     {
         //
     }
@@ -58,7 +59,7 @@ class RolController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Rol $rol)
+    public function destroy(Ticket $ticket)
     {
         //
     }

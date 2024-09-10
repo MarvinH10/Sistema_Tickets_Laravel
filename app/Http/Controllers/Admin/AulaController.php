@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Pabellon;
+use App\Http\Controllers\Controller;
+use App\Models\Aula;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-class PabellonController extends Controller
+class AulaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Admin/Pabellon');
+        return Inertia::render('Admin/Aula');
     }
 
     /**
@@ -35,7 +35,7 @@ class PabellonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pabellon $pabellon)
+    public function show(Aula $aula)
     {
         //
     }
@@ -43,7 +43,7 @@ class PabellonController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pabellon $pabellon)
+    public function edit(Aula $aula)
     {
         //
     }
@@ -51,7 +51,7 @@ class PabellonController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pabellon $pabellon)
+    public function update(Request $request, Aula $aula)
     {
         //
     }
@@ -59,7 +59,7 @@ class PabellonController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pabellon $pabellon)
+    public function destroy(Aula $aula)
     {
         //
     }

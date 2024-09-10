@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Subcategoria;
+use App\Http\Controllers\Controller;
+use App\Models\Sede;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class SubcategoriaController extends Controller
+class SedeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render('Admin/Sedes');
     }
 
     /**
@@ -34,7 +36,7 @@ class SubcategoriaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Subcategoria $subcategoria)
+    public function show(Sede $sede)
     {
         //
     }
@@ -42,7 +44,7 @@ class SubcategoriaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Subcategoria $subcategoria)
+    public function edit(Sede $sede)
     {
         //
     }
@@ -50,7 +52,7 @@ class SubcategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Subcategoria $subcategoria)
+    public function update(Request $request, Sede $sede)
     {
         //
     }
@@ -58,7 +60,7 @@ class SubcategoriaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Subcategoria $subcategoria)
+    public function destroy(Sede $sede)
     {
         //
     }

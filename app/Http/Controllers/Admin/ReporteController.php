@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Prioridad;
+use App\Http\Controllers\Controller;
+use App\Models\Reporte;
 use Illuminate\Http\Request;
 
-class PrioridadController extends Controller
+class ReporteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class PrioridadController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Prioridad $prioridad)
+    public function show(Reporte $reporte)
     {
         //
     }
@@ -42,7 +43,7 @@ class PrioridadController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Prioridad $prioridad)
+    public function edit(Reporte $reporte)
     {
         //
     }
@@ -50,7 +51,7 @@ class PrioridadController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Prioridad $prioridad)
+    public function update(Request $request, Reporte $reporte)
     {
         //
     }
@@ -58,7 +59,7 @@ class PrioridadController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Prioridad $prioridad)
+    public function destroy(Reporte $reporte)
     {
         //
     }

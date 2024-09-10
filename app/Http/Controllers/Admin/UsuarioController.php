@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Sede;
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class SedeController extends Controller
+class UsuarioController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Admin/Sedes');
+        return Inertia::render("Admin/User");
     }
 
     /**
@@ -35,7 +36,7 @@ class SedeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sede $sede)
+    public function show(User $user)
     {
         //
     }
@@ -43,7 +44,7 @@ class SedeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Sede $sede)
+    public function edit(User $user)
     {
         //
     }
@@ -51,7 +52,7 @@ class SedeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sede $sede)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -59,7 +60,7 @@ class SedeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sede $sede)
+    public function destroy(User $user)
     {
         //
     }
