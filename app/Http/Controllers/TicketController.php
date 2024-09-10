@@ -12,7 +12,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Ticket/Ticket');
+        return Inertia::render('Admin/Ticket');
     }
 
     /**
