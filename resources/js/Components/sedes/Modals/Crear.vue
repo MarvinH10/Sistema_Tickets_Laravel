@@ -1,29 +1,85 @@
 <script setup>
+import { ref } from "vue";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+library.add(faSave, faTimes);
+
+const emit = defineEmits(["cerrar", "crear"]);
+
+const nuevaSede = ref({
+    nombre: "",
+    direccion: "",
+    ciudad: "",
+    codigoPostal: "",
+    telefono: "",
+    correo: "",
+});
+
+const crearSede = () => {
+    emit("crear", { ...nuevaSede.value });
+    nuevaSede.value = {
+        nombre: "",
+        direccion: "",
+        ciudad: "",
+        codigoPostal: "",
+        telefono: "",
+        correo: "",
+    };
+};
+
+const cerrarModal = () => {
+    emit("cerrar");
+};
 </script>
 
 <template>
-    <div v-if="mostrarModalCrearSede" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-            <h2 class="text-xl font-bold mb-4">Crear Nueva Sede</h2>
+    <div
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+        <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
+            <h2 class="mb-4 text-xl font-bold">Crear Nueva Sede</h2>
             <label class="block mb-2">Nombre:</label>
-            <input type="text" v-model="nuevaSede.nombre" class="border p-2 w-full rounded mb-4" />
+            <input
+                type="text"
+                v-model="nuevaSede.nombre"
+                class="w-full p-2 mb-4 border rounded"
+            />
             <label class="block mb-2">Dirección:</label>
-            <input type="text" v-model="nuevaSede.direccion" class="border p-2 w-full rounded mb-4" />
+            <input
+                type="text"
+                v-model="nuevaSede.direccion"
+                class="w-full p-2 mb-4 border rounded"
+            />
             <label class="block mb-2">Ciudad:</label>
-            <input type="text" v-model="nuevaSede.ciudad" class="border p-2 w-full rounded mb-4" />
-            <label class="block mb-2">Código Postal:</label>
-            <input type="text" v-model="nuevaSede.codigoPostal" class="border p-2 w-full rounded mb-4" />
+            <input
+                type="text"
+                v-model="nuevaSede.ciudad"
+                class="w-full p-2 mb-4 border rounded"
+            />
             <label class="block mb-2">Teléfono:</label>
-            <input type="text" v-model="nuevaSede.telefono" class="border p-2 w-full rounded mb-4" />
-            <label class="block mb-2">Correo Electrónico:</label>
-            <input type="email" v-model="nuevaSede.correo" class="border p-2 w-full rounded mb-4" />
-            <button @click="crearSede" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                Crear
-            </button>
-            <button @click="cerrarCrearSedeModal" class="ml-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                Cancelar
-            </button>
+            <input
+                type="text"
+                v-model="nuevaSede.telefono"
+                class="w-full p-2 mb-4 border rounded"
+            />
+            <div class="flex justify-end mt-6 space-x-4">
+                <button
+                    @click="crearSede"
+                    class="flex items-center px-2 py-2 text-white transition-all duration-300 bg-green-500 rounded-lg shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                >
+                    <font-awesome-icon icon="save" class="mr-2 text-lg" />
+                    Crear
+                </button>
+                <button
+                    @click="cerrarModal"
+                    class="flex items-center px-2 py-2 text-white transition-all duration-300 bg-red-500 rounded-lg shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                >
+                    <font-awesome-icon icon="times" class="mr-2 text-lg" />
+                    Cerrar
+                </button>
+            </div>
         </div>
     </div>
 </template>
