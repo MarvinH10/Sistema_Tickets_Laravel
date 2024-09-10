@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PabellonController;
+use App\Http\Controllers\SedeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,4 +29,6 @@ Route::middleware([
     Route::get('/ticket', [TicketController::class, 'index'])->name('ticket');
     Route::get('/pabellon', [PabellonController::class, 'index'])->name('pabellon');
     Route::get('/aula', [AulaController::class, 'index'])->name('aula');
+    Route::get('/sedes', [SedeController::class, 'index'])->name('sedes');
+    Route::get('/user', [UserController::class, 'index'])->name('user');
 });
