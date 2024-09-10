@@ -13,7 +13,7 @@ class PabellonController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Ticket/Pabellon');
+        return Inertia::render('Admin/Pabellon');
     }
 
     /**

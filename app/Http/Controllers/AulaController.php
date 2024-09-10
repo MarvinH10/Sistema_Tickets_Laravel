@@ -12,7 +12,7 @@ class AulaController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Ticket/Aula');
+        return Inertia::render('Admin/Aula');
     }
 
     /**

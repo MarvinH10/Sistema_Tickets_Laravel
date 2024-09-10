@@ -1,16 +1,14 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import listTicket from '@/Components/Ticket/listTicket.vue';
-import Listpabellon from '@/Components/pabellones/Listpabellon.vue';
-import Listaulas from '@/Components/pabellones/Listaulas.vue';
+import listPabellon from '@/Components/Pabellon/listPabellon.vue';
 </script>
 
 <template>
-    <AppLayout title="Tickets">
+    <AppLayout title="Pabellones">
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <Listaulas />
+                    <listPabellon />
                 </div>
             </div>
         </div>
