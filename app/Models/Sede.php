@@ -9,5 +9,5 @@ class Sede extends Model
 {
     use HasFactory;
 
-    public $fillable = ['sed_nombre', 'sed_activo'];
+    public $fillable = ['sed_nombre', 'sed_direccion', 'sed_ciudad', 'sed_telefono', 'sed_activo'];
 }

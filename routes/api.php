@@ -11,3 +11,5 @@ Route::get('/user', function (Request $request) {
 Route::get('/sedes', function () {
     return Sede::all();
 });
+
+require __DIR__ . '/admin.php';

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Sede;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SedeController extends Controller
 {
@@ -12,7 +14,7 @@ class SedeController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Admin/Sedes');
     }
 
     /**
