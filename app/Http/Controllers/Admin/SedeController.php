@@ -30,7 +30,16 @@ class SedeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validarDatos = $request->validate([
+            'sed_nombre' => 'required|string|max:255',
+            'sed_direccion' => 'required|string|max:255',
+            'sed_ciudad' => 'required|string|max:255',
+            'sed_telefono' => 'required|string|max:20',
+            'sed_activo' => 'boolean',
+        ]);
+
+        $sede = Sede::create($validarDatos);
+        return response()->json($sede, 201);
     }
 
     /**

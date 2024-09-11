@@ -1,13 +1,13 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import listSedes from '@/Components/Sedes/listSedes.vue';
+import AppLayout from "@/Layouts/AppLayout.vue";
+import listSedes from "@/Components/Sedes/listSedes.vue";
 </script>
 
 <template>
     <AppLayout title="Sedes">
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg">
                     <listSedes />
                 </div>
             </div>

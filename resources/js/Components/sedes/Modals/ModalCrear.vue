@@ -3,30 +3,43 @@ import { ref } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import axios from "axios";
 
 library.add(faSave, faTimes);
 
 const emit = defineEmits(["cerrar", "crear"]);
 
 const nuevaSede = ref({
-    nombre: "",
-    direccion: "",
-    ciudad: "",
-    codigoPostal: "",
-    telefono: "",
-    correo: "",
+    sed_nombre: "",
+    sed_direccion: "",
+    sed_ciudad: "",
+    sed_telefono: "",
+    sed_activo: true,
 });
 
-const crearSede = () => {
-    emit("crear", { ...nuevaSede.value });
-    nuevaSede.value = {
-        nombre: "",
-        direccion: "",
-        ciudad: "",
-        codigoPostal: "",
-        telefono: "",
-        correo: "",
-    };
+const errores = ref([]);
+
+const crearSede = async () => {
+    try {
+        const response = await axios.post("/api/sedes", nuevaSede.value);
+        emit("crear", response.data);
+
+        nuevaSede.value = {
+            sed_nombre: "",
+            sed_direccion: "",
+            sed_ciudad: "",
+            sed_telefono: "",
+            sed_activo: true,
+        };
+        errores.value = [];
+        emit("cerrar");
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            errores.value = error.response.data.errors;
+        } else {
+            console.error("Error al crear la sede:", error);
+        }
+    }
 };
 
 const cerrarModal = () => {
@@ -43,25 +56,25 @@ const cerrarModal = () => {
             <label class="block mb-2">Nombre:</label>
             <input
                 type="text"
-                v-model="nuevaSede.nombre"
+                v-model="nuevaSede.sed_nombre"
                 class="w-full p-2 mb-4 border rounded"
             />
             <label class="block mb-2">Dirección:</label>
             <input
                 type="text"
-                v-model="nuevaSede.direccion"
+                v-model="nuevaSede.sed_direccion"
                 class="w-full p-2 mb-4 border rounded"
             />
             <label class="block mb-2">Ciudad:</label>
             <input
                 type="text"
-                v-model="nuevaSede.ciudad"
+                v-model="nuevaSede.sed_ciudad"
                 class="w-full p-2 mb-4 border rounded"
             />
             <label class="block mb-2">Teléfono:</label>
             <input
                 type="text"
-                v-model="nuevaSede.telefono"
+                v-model="nuevaSede.sed_telefono"
                 class="w-full p-2 mb-4 border rounded"
             />
             <div class="flex justify-end mt-6 space-x-4">
