@@ -1,14 +1,20 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import ModalCrear from "./Modals/ModalCrear.vue";
+import ModalVer from "./Modals/ModalVer.vue";
+import ModalEditar from "./Modals/ModalEditar.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import axios from "axios";
 
 library.add(faPlus);
 
 const sedes = ref([]);
 const mostrarModalCrearSede = ref(false);
+const mostrarModalDetallesSede = ref(false);
+const mostrarModalEditarSede = ref(false);
+const sedeSeleccionada = ref(null);
 
 const validatePhoneNumber = (telefono) => {
     const phone = telefono.toString();
@@ -17,15 +23,13 @@ const validatePhoneNumber = (telefono) => {
 
 const fetchSedes = async () => {
     try {
-        const response = await fetch("/api/sedes");
-        const data = await response.json();
-        sedes.value = data.map((sede) => ({
+        const response = await axios.get("/sedes");
+        sedes.value = response.data.map((sede) => ({
             id: sede.id,
-            nombre: sede.sed_nombre,
-            direccion: sede.sed_direccion,
-            ciudad: sede.sed_ciudad,
-            telefono: validatePhoneNumber(sede.sed_telefono),
-            correo: sede.sed_correo,
+            sed_nombre: sede.sed_nombre,
+            sed_direccion: sede.sed_direccion,
+            sed_ciudad: sede.sed_ciudad,
+            sed_telefono: validatePhoneNumber(sede.sed_telefono),
         }));
     } catch (error) {
         console.error("Error al cargar las sedes:", error);
@@ -35,21 +39,8 @@ const fetchSedes = async () => {
 const eliminarSede = async (id) => {
     if (confirm("¿Estás seguro de que deseas eliminar esta sede?")) {
         try {
-            const response = await fetch(`/api/sedes/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (response.ok) {
-                sedes.value = sedes.value.filter((sede) => sede.id !== id);
-            } else {
-                console.error(
-                    "Error al eliminar la sede:",
-                    response.statusText
-                );
-            }
+            await axios.delete(`/sedes/${id}`);
+            sedes.value = sedes.value.filter((sede) => sede.id !== id);
         } catch (error) {
             console.error("Error al eliminar la sede:", error);
         }
@@ -64,15 +55,22 @@ const cerrarCrearSedeModal = () => {
     mostrarModalCrearSede.value = false;
 };
 
-const crearSede = (nuevaSede) => {
-    sedes.value.push({
-        id: nuevaSede.id,
-        nombre: nuevaSede.sed_nombre,
-        direccion: nuevaSede.sed_direccion,
-        ciudad: nuevaSede.sed_ciudad,
-        telefono: validatePhoneNumber(nuevaSede.sed_telefono),
-    });
-    cerrarCrearSedeModal();
+const abrirDetallesModal = (sede) => {
+    sedeSeleccionada.value = sede;
+    mostrarModalDetallesSede.value = true;
+};
+
+const cerrarDetallesModal = () => {
+    mostrarModalDetallesSede.value = false;
+};
+
+const abrirEditarModal = (sede) => {
+    sedeSeleccionada.value = sede;
+    mostrarModalEditarSede.value = true;
+};
+
+const cerrarEditarModal = () => {
+    mostrarModalEditarSede.value = false;
 };
 
 onMounted(() => {
@@ -134,29 +132,29 @@ onMounted(() => {
                         class="transition-colors duration-200 border-b"
                     >
                         <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.nombre }}
+                            {{ sede.sed_nombre }}
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.direccion }}
+                            {{ sede.sed_direccion }}
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.ciudad }}
+                            {{ sede.sed_ciudad }}
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.telefono }}
+                            {{ sede.sed_telefono }}
                         </td>
                         <td
                             class="flex items-center justify-center py-3 space-x-3"
                         >
                             <button
-                                @click="showDetallesModal(sede)"
+                                @click="abrirDetallesModal(sede)"
                                 class="text-blue-500 transition duration-300 hover:text-blue-700"
                                 title="Ver detalles"
                             >
                                 <i class="fas fa-eye"></i>
                             </button>
                             <button
-                                @click="showEditarModal(sede)"
+                                @click="abrirEditarModal(sede)"
                                 class="text-green-500 transition duration-300 hover:text-green-700"
                                 title="Editar"
                             >
@@ -178,7 +176,22 @@ onMounted(() => {
         <ModalCrear
             v-if="mostrarModalCrearSede"
             @cerrar="cerrarCrearSedeModal"
-            @crear="crearSede"
+            @crear="fetchSedes"
+        />
+
+        <ModalVer
+            v-if="mostrarModalDetallesSede"
+            :sede="sedeSeleccionada"
+            :mostrarModalDetallesSede="mostrarModalDetallesSede"
+            @close="cerrarDetallesModal"
+        />
+
+        <ModalEditar
+            v-if="mostrarModalEditarSede"
+            :sede="sedeSeleccionada"
+            :mostrarModalEditarSede="mostrarModalEditarSede"
+            @cerrar="cerrarEditarModal"
+            @update="fetchSedes"
         />
     </div>
 </template>
