@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('telefono')->nullable();
+            $table->string('celular');
             $table->boolean('activo')->default(true);
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

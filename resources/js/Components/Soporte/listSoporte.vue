@@ -1,376 +1,250 @@
-<script>
-export default {
-    data() {
-        return {
-            mostrarModalCrearUsuario: false,
-            mostrarModalDetalles: false,
-            mostrarModalEditar: false,
-            usuarioSeleccionado: {},
-            nuevoUsuario: {
-                nombre: "",
-                apellido: "",
-                correo: "",
-                telefono: "",
-                rol: "Usuario",
-            },
-            searchQuery: "",
-            currentPage: 1,
-            itemsPerPage: 5,
-            usuarios: [
-                {
-                    id: 1,
-                    nombre: "Juan",
-                    apellido: "Perez",
-                    correo: "juan.perez@example.com",
-                    telefono: "123-456-7890",
-                    rol: "Administrador",
-                },
-                {
-                    id: 2,
-                    nombre: "Maria",
-                    apellido: "Lopez",
-                    correo: "maria.lopez@example.com",
-                    telefono: "987-654-3210",
-                    rol: "Usuario",
-                },
-                {
-                    id: 3,
-                    nombre: "Carlos",
-                    apellido: "Garcia",
-                    correo: "carlos.garcia@example.com",
-                    telefono: "456-789-1230",
-                    rol: "Soporte",
-                },
-                // Añadir más usuarios...
-            ],
-        };
-    },
-    computed: {
-        filteredUsuarios() {
-            const search = this.searchQuery.toLowerCase();
-            return this.usuarios.filter((usuario) => {
-                return (
-                    usuario.nombre.toLowerCase().includes(search) ||
-                    usuario.apellido.toLowerCase().includes(search) ||
-                    usuario.correo.toLowerCase().includes(search) ||
-                    usuario.telefono.includes(search) ||
-                    usuario.rol.toLowerCase().includes(search)
-                );
-            });
-        },
-        paginatedUsuarios() {
-            const start = (this.currentPage - 1) * this.itemsPerPage;
-            const end = start + this.itemsPerPage;
-            return this.filteredUsuarios.slice(start, end);
-        },
-        totalPages() {
-            return Math.ceil(this.filteredUsuarios.length / this.itemsPerPage);
-        },
-    },
-    methods: {
-        goToPage(page) {
-            if (page >= 1 && page <= this.totalPages) {
-                this.currentPage = page;
-            }
-        },
+<script setup>
+import { ref, onMounted, computed } from "vue";
+import ModalCrear from "./Modals/ModalCrear.vue";
+import ModalVer from "./Modals/ModalVer.vue";
+import ModalEditar from "./Modals/ModalEditar.vue";
+import ModalEliminar from "./Modals/ModalEliminar.vue";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import axios from "axios";
 
-        showCrearUsuarioModal() {
-            this.mostrarModalCrearUsuario = true;
-        },
+library.add(faPlus);
 
-        cerrarCrearUsuarioModal() {
-            this.mostrarModalCrearUsuario = false;
-        },
+const soportes = ref([]);
+const buscarQuery = ref("");
+const mostrarModalCrearSoporte = ref(false);
+const mostrarModalDetallesSoporte = ref(false);
+const mostrarModalEditarSoporte = ref(false);
+const mostrarModalEliminarSoporte = ref(false);
+const soporteSeleccionado = ref(null);
 
-        crearUsuario() {
-            const nuevo = {
-                id: this.usuarios.length + 1,
-                ...this.nuevoUsuario,
-            };
-            this.usuarios.push(nuevo);
-            this.cerrarCrearUsuarioModal();
-        },
-
-        showDetallesModal(usuario) {
-            this.usuarioSeleccionado = usuario;
-            this.mostrarModalDetalles = true;
-        },
-
-        cerrarDetallesModal() {
-            this.mostrarModalDetalles = false;
-        },
-
-        showEditarModal(usuario) {
-            this.usuarioSeleccionado = usuario;
-            this.mostrarModalEditar = true;
-            this.nuevoUsuario = { ...usuario };
-        },
-
-        cerrarEditarModal() {
-            this.mostrarModalEditar = false;
-        },
-
-        editarUsuario() {
-            const index = this.usuarios.findIndex(
-                (usuario) => usuario.id === this.nuevoUsuario.id
-            );
-            if (index !== -1) {
-                this.usuarios[index] = { ...this.nuevoUsuario };
-            }
-            this.cerrarEditarModal();
-        },
-    },
+const validatePhoneNumber = (telefono) => {
+    const phone = telefono.toString();
+    return phone.startsWith("+51") ? phone : `+51 ${phone}`;
 };
+
+const filtrarSoportes = computed(() => {
+    return soportes.value.filter(
+        (soporte) =>
+            soporte.name
+                .toLowerCase()
+                .includes(buscarQuery.value.toLowerCase()) ||
+            soporte.email
+                .toLowerCase()
+                .includes(buscarQuery.value.toLowerCase()) ||
+            soporte.celular
+                .toLowerCase()
+                .includes(buscarQuery.value.toLowerCase())
+    );
+});
+
+const fetchSoportes = async () => {
+    try {
+        const response = await axios.get("/soportes");
+        soportes.value = response.data
+            .filter((soporte) => soporte.activo === 1)
+            .map((soporte) => ({
+                id: soporte.id,
+                name: soporte.name,
+                email: soporte.email,
+                celular: validatePhoneNumber(soporte.celular),
+                rol_nombre: soporte.rol.rol_nombre,
+            }));
+    } catch (error) {
+        console.error("Error al cargar los soportes técnicos:", error);
+    }
+};
+
+const eliminarSoporte = async () => {
+    if (soporteSeleccionado.value) {
+        try {
+            await axios.delete(`/soportes/${soporteSeleccionado.value.id}`);
+            soportes.value = soportes.value.filter(
+                (soporte) => soporte.id !== soporteSeleccionado.value.id
+            );
+            mostrarModalEliminarSoporte.value = false;
+        } catch (error) {
+            console.error("Error al eliminar al soporte técnico:", error);
+        }
+    }
+};
+
+const abrirCrearSoporteModal = () => {
+    mostrarModalCrearSoporte.value = true;
+};
+
+const cerrarCrearSoporteModal = () => {
+    mostrarModalCrearSoporte.value = false;
+};
+
+const abrirDetallesModal = (soporte) => {
+    soporteSeleccionado.value = soporte;
+    mostrarModalDetallesSoporte.value = true;
+};
+
+const cerrarDetallesModal = () => {
+    mostrarModalDetallesSoporte.value = false;
+};
+
+const abrirEditarModal = (soporte) => {
+    soporteSeleccionado.value = soporte;
+    mostrarModalEditarSoporte.value = true;
+};
+
+const cerrarEditarModal = () => {
+    mostrarModalEditarSoporte.value = false;
+};
+const abrirEliminarModal = (soporte) => {
+    soporteSeleccionado.value = soporte;
+    mostrarModalEliminarSoporte.value = true;
+};
+
+const cerrarEliminarModal = () => {
+    mostrarModalEliminarSoporte.value = false;
+};
+
+onMounted(() => {
+    fetchSoportes();
+});
 </script>
 
 <template>
-    <div class="container p-6 main-container">
-        <h1 class="mb-4 text-2xl font-bold">Lista de Soportes Técnicos</h1>
+    <div class="w-full max-w-6xl p-4 mx-auto">
+        <h1 class="mb-6 text-2xl font-bold">Lista de Soportes Técnicos</h1>
 
-        <!-- Barra de búsqueda -->
-        <div class="flex justify-end pb-6 mb-2">
+        <div class="flex items-center mb-4 space-x-4">
             <input
-                v-model="searchQuery"
                 type="text"
-                placeholder="Buscar por nombre, apellido, correo, teléfono o rol..."
-                class="w-full p-1 mr-4 border rounded"
+                v-model="buscarQuery"
+                placeholder="Buscar por nombre, correo o teléfono"
+                class="flex-grow p-2 border border-gray-300 rounded-md"
             />
+
             <button
-                @click="showCrearUsuarioModal"
-                class="text-white transition duration-300 bg-green-500 rounded hover:bg-green-600"
+                @click="abrirCrearSoporteModal"
+                class="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 bg-green-500 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
             >
-                Crear Usuario
+                <font-awesome-icon icon="plus" class="mr-2 text-lg" />
+                Crear Nuevo
             </button>
         </div>
 
-        <!-- Tabla interactiva con paginación -->
-        <table class="min-w-full bg-white border">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 border">Nombre</th>
-                    <th class="px-4 py-2 border">Apellido</th>
-                    <th class="px-4 py-2 border">Correo</th>
-                    <th class="px-4 py-2 border">Teléfono</th>
-                    <th class="px-4 py-2 border">Rol</th>
-                    <th class="px-4 py-2 border">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    v-for="usuario in paginatedUsuarios"
-                    :key="usuario.id"
-                    class="border-t"
-                >
-                    <td class="px-4 py-2 border">{{ usuario.nombre }}</td>
-                    <td class="px-4 py-2 border">{{ usuario.apellido }}</td>
-                    <td class="px-4 py-2 border">{{ usuario.correo }}</td>
-                    <td class="px-4 py-2 border">{{ usuario.telefono }}</td>
-                    <td class="px-4 py-2 border">{{ usuario.rol }}</td>
-                    <td class="flex justify-between px-4 py-2 space-x-2 border">
-                        <button
-                            @click="showDetallesModal(usuario)"
-                            class="text-blue-500 transition duration-300 hover:text-blue-700"
+        <div class="overflow-x-auto">
+            <table
+                class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md"
+            >
+                <thead class="bg-gray-900 border-b border-gray-200">
+                    <tr>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-left text-white"
                         >
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button
-                            @click="showEditarModal(usuario)"
-                            class="text-green-500 transition duration-300 hover:text-green-700"
+                            Nombres
+                        </th>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-left text-white"
                         >
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Paginación -->
-        <div class="flex justify-end mt-4 space-x-2">
-            <button
-                @click="goToPage(currentPage - 1)"
-                :disabled="currentPage === 1"
-                class="px-3 py-1 text-gray-700 bg-gray-300 rounded hover:bg-gray-400 disabled:bg-gray-200"
-            >
-                Anterior
-            </button>
-            <span class="text-gray-700"
-                >Página {{ currentPage }} de {{ totalPages }}</span
-            >
-            <button
-                @click="goToPage(currentPage + 1)"
-                :disabled="currentPage === totalPages"
-                class="px-3 py-1 text-gray-700 bg-gray-300 rounded hover:bg-gray-400 disabled:bg-gray-200"
-            >
-                Siguiente
-            </button>
+                            Correo
+                        </th>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-left text-white"
+                        >
+                            Teléfono
+                        </th>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-left text-white"
+                        >
+                            Rol
+                        </th>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-center text-white"
+                        >
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="soporte in filtrarSoportes"
+                        :key="soporte.id"
+                        class="transition-colors duration-200 border-b"
+                    >
+                        <td class="px-4 py-3 text-sm text-gray-700">
+                            {{ soporte.name }}
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-700">
+                            {{ soporte.email }}
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-700">
+                            {{ soporte.celular }}
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-700">
+                            {{ soporte.rol_nombre }}
+                        </td>
+                        <td
+                            class="flex items-center justify-center py-3 space-x-3"
+                        >
+                            <button
+                                @click="abrirDetallesModal(soporte)"
+                                class="text-blue-500 transition duration-300 hover:text-blue-700"
+                                title="Ver detalles"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button
+                                @click="abrirEditarModal(soporte)"
+                                class="text-green-500 transition duration-300 hover:text-green-700"
+                                title="Editar"
+                            >
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button
+                                @click="abrirEliminarModal(soporte)"
+                                class="text-red-500 transition duration-300 hover:text-red-700"
+                                title="Eliminar"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr v-if="filtrarSoportes.length === 0">
+                        <td
+                            colspan="5"
+                            class="px-4 py-3 text-sm text-center text-gray-500"
+                        >
+                            No se encontraron resultados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Modal Crear Usuario -->
-        <div
-            v-if="mostrarModalCrearUsuario"
-            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        >
-            <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
-                <h2 class="mb-4 text-xl font-bold">Crear Nuevo Usuario</h2>
-                <label class="block mb-2">Nombre:</label>
-                <input
-                    type="text"
-                    v-model="nuevoUsuario.nombre"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Apellido:</label>
-                <input
-                    type="text"
-                    v-model="nuevoUsuario.apellido"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Correo Electrónico:</label>
-                <input
-                    type="email"
-                    v-model="nuevoUsuario.correo"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Teléfono:</label>
-                <input
-                    type="text"
-                    v-model="nuevoUsuario.telefono"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Rol:</label>
-                <select
-                    v-model="nuevoUsuario.rol"
-                    class="w-full p-2 mb-4 border rounded"
-                >
-                    <option value="Administrador">Administrador</option>
-                    <option value="Usuario">Usuario</option>
-                    <option value="Soporte">Soporte</option>
-                </select>
-                <button
-                    @click="crearUsuario"
-                    class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
-                >
-                    Crear
-                </button>
-                <button
-                    @click="cerrarCrearUsuarioModal"
-                    class="px-4 py-2 ml-4 text-white bg-red-500 rounded hover:bg-red-600"
-                >
-                    Cancelar
-                </button>
-            </div>
-        </div>
+        <ModalCrear
+            v-if="mostrarModalCrearSoporte"
+            @cerrar="cerrarCrearSoporteModal"
+            @crear="fetchSoportes"
+        />
 
-        <!-- Modal Detalles Usuario -->
-        <div
-            v-if="mostrarModalDetalles"
-            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        >
-            <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
-                <h2 class="mb-4 text-xl font-bold">Detalles del Usuario</h2>
-                <p><strong>Nombre:</strong> {{ usuarioSeleccionado.nombre }}</p>
-                <p>
-                    <strong>Apellido:</strong>
-                    {{ usuarioSeleccionado.apellido }}
-                </p>
-                <p><strong>Correo:</strong> {{ usuarioSeleccionado.correo }}</p>
-                <p>
-                    <strong>Teléfono:</strong>
-                    {{ usuarioSeleccionado.telefono }}
-                </p>
-                <p><strong>Rol:</strong> {{ usuarioSeleccionado.rol }}</p>
-                <button
-                    @click="cerrarDetallesModal"
-                    class="px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
-                >
-                    Cerrar
-                </button>
-            </div>
-        </div>
+        <ModalVer
+            v-if="mostrarModalDetallesSoporte"
+            :soporte="soporteSeleccionado"
+            :mostrarModalDetallesSoporte="mostrarModalDetallesSoporte"
+            @close="cerrarDetallesModal"
+        />
 
-        <!-- Modal Editar Usuario -->
-        <div
-            v-if="mostrarModalEditar"
-            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        >
-            <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
-                <h2 class="mb-4 text-xl font-bold">Editar Usuario</h2>
-                <label class="block mb-2">Nombre:</label>
-                <input
-                    type="text"
-                    v-model="nuevoUsuario.nombre"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Apellido:</label>
-                <input
-                    type="text"
-                    v-model="nuevoUsuario.apellido"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Correo Electrónico:</label>
-                <input
-                    type="email"
-                    v-model="nuevoUsuario.correo"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Teléfono:</label>
-                <input
-                    type="text"
-                    v-model="nuevoUsuario.telefono"
-                    class="w-full p-2 mb-4 border rounded"
-                />
-                <label class="block mb-2">Rol:</label>
-                <select
-                    v-model="nuevoUsuario.rol"
-                    class="w-full p-2 mb-4 border rounded"
-                >
-                    <option value="Administrador">Administrador</option>
-                    <option value="Usuario">Usuario</option>
-                    <option value="Soporte">Soporte</option>
-                </select>
-                <button
-                    @click="editarUsuario"
-                    class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
-                >
-                    Guardar Cambios
-                </button>
-                <button
-                    @click="cerrarEditarModal"
-                    class="px-4 py-2 ml-4 text-white bg-red-500 rounded hover:bg-red-600"
-                >
-                    Cancelar
-                </button>
-            </div>
-        </div>
+        <ModalEditar
+            v-if="mostrarModalEditarSoporte"
+            :soporte="soporteSeleccionado"
+            :mostrarModalEditarSoporte="mostrarModalEditarSoporte"
+            @cerrar="cerrarEditarModal"
+            @update="fetchSoportes"
+        />
+
+        <ModalEliminar
+            v-if="mostrarModalEliminarSoporte"
+            :soporte="soporteSeleccionado"
+            @confirmar="eliminarSoporte"
+            @cancelar="cerrarEliminarModal"
+        />
     </div>
 </template>
-
-<style scoped>
-.main-container {
-    max-width: 1600px;
-    padding: 20px;
-}
-
-.container {
-    max-width: 1200px;
-}
-
-.flex {
-    display: flex;
-}
-
-.items-center {
-    align-items: center;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
-
-.w-full {
-    width: 100%;
-}
-
-.mt-4 {
-    margin-top: 1rem;
-}
-</style>

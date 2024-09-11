@@ -26,7 +26,12 @@ Route::middleware([
     });
 
     Route::controller(UsuarioController::class)->group(function () {
+        /** SOPORTE TÉCNICO **/
         Route::get('/soporte', 'soporte')->name('soporte');
+        Route::get('/soportes', 'traerSoporte');
+        Route::post('/soportes', 'storeSoporte');
+        Route::delete('/soportes/{soporte}', 'destroySoporte');
+        /** DOCENTE **/
         Route::get('/docente', 'docente')->name('docente');
     });
 
