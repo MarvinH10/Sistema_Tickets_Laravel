@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import listSedes from "@/Components/Sedes/listSedes.vue";
+import listSedes from "@/Components/Sede/listSedes.vue";
 </script>
 
 <template>

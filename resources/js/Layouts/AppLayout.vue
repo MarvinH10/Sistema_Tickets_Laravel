@@ -186,7 +186,7 @@ defineProps({
                                         icon="user-shield"
                                         class="text-lg"
                                     />
-                                    <span>Soportes Técnicos</span>
+                                    <span>Soportes</span>
                                 </NavLink>
 
                                 <NavLink
