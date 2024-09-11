@@ -48,6 +48,7 @@ const fetchSoportes = async () => {
                 id: soporte.id,
                 name: soporte.name,
                 email: soporte.email,
+                sed_id: soporte.sed_id,
                 celular: validatePhoneNumber(soporte.celular),
                 rol_nombre: soporte.rol.rol_nombre,
             }));

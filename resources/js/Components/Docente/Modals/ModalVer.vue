@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(faTimes);
 
 const props = defineProps({
-    soporte: Object,
-    mostrarModalDetallesSoporte: Boolean,
+    docente: Object,
+    mostrarModalDetallesDocente: Boolean,
 });
 
 const emit = defineEmits(["close"]);
@@ -19,15 +19,15 @@ const cerrarDetallesModal = () => {
 
 <template>
     <div
-        v-if="mostrarModalDetallesSoporte"
+        v-if="mostrarModalDetallesDocente"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
         <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
-            <h2 class="mb-4 text-xl font-bold">Detalles del Soporte Técnico</h2>
-            <p><strong>Nombres:</strong> {{ soporte.name }}</p>
-            <p><strong>Correo:</strong> {{ soporte.email }}</p>
-            <p><strong>Teléfono:</strong> {{ soporte.celular }}</p>
-            <p><strong>Rol:</strong> {{ soporte.rol_nombre }}</p>
+            <h2 class="mb-4 text-xl font-bold">Detalles del Docente</h2>
+            <p><strong>Nombres:</strong> {{ docente.name }}</p>
+            <p><strong>Correo:</strong> {{ docente.email }}</p>
+            <p><strong>Teléfono:</strong> {{ docente.celular }}</p>
+            <p><strong>Rol:</strong> {{ docente.rol_nombre }}</p>
             <button
                 @click="cerrarDetallesModal"
                 class="flex items-center px-2 py-2 mt-4 text-white transition-all duration-300 bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -7,38 +7,61 @@ import axios from "axios";
 
 library.add(faSave, faTimes);
 
-const props = defineProps({
-    soporte: Object,
-    mostrarModalEditarSoporte: Boolean,
-});
+const emit = defineEmits(["cerrar", "crear"]);
 
-const emit = defineEmits(["cerrar", "update"]);
-
-const nuevoSoporte = ref({
+const nuevoDocente = ref({
     name: "",
     email: "",
     celular: "",
     sed_id: "",
     password: "",
+    activo: true,
 });
 
+const errores = ref([]);
 const sedes = ref([]);
 
-watch(
-    () => props.soporte,
-    (newSoporte) => {
-        if (newSoporte) {
-            nuevoSoporte.value = {
-                name: newSoporte.name || "",
-                email: newSoporte.email || "",
-                celular: newSoporte.celular || "",
-                sed_id: newSoporte.sed_id || "",
-                password: "",
-            };
+const generarPasswordAleatorio = () => {
+    const caracteres =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let password = "";
+    for (let i = 0; i < 8; i++) {
+        password += caracteres.charAt(
+            Math.floor(Math.random() * caracteres.length)
+        );
+    }
+    return password;
+};
+
+const crearDocente = async () => {
+    try {
+        const response = await axios.post("/docentes", nuevoDocente.value, {
+            headers: {
+                "X-CSRF-TOKEN": document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
+            },
+        });
+        emit("crear", response.data);
+
+        nuevoDocente.value = {
+            name: "",
+            email: "",
+            celular: "",
+            sed_id: "",
+            password: generarPasswordAleatorio(),
+            activo: true,
+        };
+        errores.value = [];
+        emit("cerrar");
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            errores.value = error.response.data.errors;
+        } else {
+            console.error("Error al crear al docente:", error);
         }
-    },
-    { immediate: true }
-);
+    }
+};
 
 const fetchSedes = async () => {
     try {
@@ -52,55 +75,31 @@ const fetchSedes = async () => {
     }
 };
 
-const editarSoporte = async () => {
-    try {
-        const response = await axios.put(
-            `/soportes/${props.soporte.id}`,
-            nuevoSoporte.value,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document
-                        .querySelector('meta[name="csrf-token"]')
-                        .getAttribute("content"),
-                },
-            }
-        );
-        emit("update", response.data);
-        cerrarEditarModal();
-    } catch (error) {
-        console.error("Error al editar al soporte técnico:", error);
-        if (error.response && error.response.status === 422) {
-            console.error("Errores de validación:", error.response.data.errors);
-        }
-    }
-};
-
-const cerrarEditarModal = () => {
+const cerrarModal = () => {
     emit("cerrar");
 };
 
 onMounted(() => {
+    nuevoDocente.value.password = generarPasswordAleatorio();
     fetchSedes();
 });
 </script>
 
 <template>
     <div
-        v-if="mostrarModalEditarSoporte"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
         <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
-            <h2 class="mb-4 text-xl font-bold">Editar Soporte Técnico</h2>
-            <label class="block mb-2">Nombres:</label>
+            <h2 class="mb-4 text-xl font-bold">Crear Nuevo Docente</h2>
+            <label class="block mb-2">Nombre:</label>
             <input
                 type="text"
-                v-model="nuevoSoporte.name"
+                v-model="nuevoDocente.name"
                 class="w-full p-2 mb-4 border rounded"
             />
             <label class="block mb-2">Seleccionar Sede:</label>
             <select
-                v-model="nuevoSoporte.sed_id"
+                v-model="nuevoDocente.sed_id"
                 class="w-full p-2 mb-4 border rounded"
             >
                 <option value="" disabled>Selecciona una sede</option>
@@ -115,32 +114,31 @@ onMounted(() => {
             <label class="block mb-2">Correo:</label>
             <input
                 type="text"
-                v-model="nuevoSoporte.email"
+                v-model="nuevoDocente.email"
                 class="w-full p-2 mb-4 border rounded"
             />
             <label class="block mb-2">Teléfono:</label>
             <input
                 type="text"
-                v-model="nuevoSoporte.celular"
+                v-model="nuevoDocente.celular"
                 class="w-full p-2 mb-4 border rounded"
             />
-            <label class="block mb-2">Contraseña (opcional):</label>
+            <label class="block mb-2">Contraseña:</label>
             <input
                 type="text"
-                v-model="nuevoSoporte.password"
-                placeholder="Dejar vacío si no deseas cambiar"
+                v-model="nuevoDocente.password"
                 class="w-full p-2 mb-4 border rounded"
             />
             <div class="flex justify-end mt-6 space-x-4">
                 <button
-                    @click="editarSoporte"
+                    @click="crearDocente"
                     class="flex items-center px-2 py-2 text-white transition-all duration-300 bg-green-500 rounded-lg shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                 >
                     <font-awesome-icon icon="save" class="mr-2 text-lg" />
-                    Actualizar
+                    Crear
                 </button>
                 <button
-                    @click="cerrarEditarModal"
+                    @click="cerrarModal"
                     class="flex items-center px-2 py-2 text-white transition-all duration-300 bg-red-500 rounded-lg shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                 >
                     <font-awesome-icon icon="times" class="mr-2 text-lg" />

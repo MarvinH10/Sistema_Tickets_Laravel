@@ -24,7 +24,7 @@ class RolSeeder extends Seeder
         ]);
 
         Rol::create([
-            'rol_nombre' => 'Usuario',
+            'rol_nombre' => 'Docente',
             'rol_activo' => true,
         ]);
     }
