@@ -130,6 +130,7 @@ const submit = () => {
                     id="sed_id"
                     v-model="form.sed_id"
                     :options="sedes"
+                    name="sed_id"
                     placeholder="Por favor seleccione una sede"
                     required
                 />

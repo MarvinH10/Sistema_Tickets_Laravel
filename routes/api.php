@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SedeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Sede;
@@ -12,4 +13,5 @@ Route::get('/sedes', function () {
     return Sede::all();
 });
 
-require __DIR__ . '/admin.php';
+Route::post('/sedes', [SedeController::class, 'store']);
+Route::delete('/sedes/{sede}', [SedeController::class, 'destroy']);

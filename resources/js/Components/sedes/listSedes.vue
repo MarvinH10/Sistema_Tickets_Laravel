@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import Crear from "./Modals/Crear.vue";
+import ModalCrear from "./Modals/ModalCrear.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -41,7 +41,13 @@ const cerrarCrearSedeModal = () => {
 };
 
 const crearSede = (nuevaSede) => {
-    sedes.value.push(nuevaSede);
+    sedes.value.push({
+        id: nuevaSede.id,
+        nombre: nuevaSede.sed_nombre,
+        direccion: nuevaSede.sed_direccion,
+        ciudad: nuevaSede.sed_ciudad,
+        telefono: validatePhoneNumber(nuevaSede.sed_telefono),
+    });
     cerrarCrearSedeModal();
 };
 
@@ -138,7 +144,7 @@ onMounted(() => {
             </table>
         </div>
 
-        <Crear
+        <ModalCrear
             v-if="mostrarModalCrearSede"
             @cerrar="cerrarCrearSedeModal"
             @crear="crearSede"
