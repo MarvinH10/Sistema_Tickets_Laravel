@@ -20,10 +20,12 @@ const fetchSedes = async () => {
     try {
         const response = await fetch("/api/sedes");
         const data = await response.json();
-        sedes.value = data.map((sede) => ({
-            value: sede.id,
-            text: sede.sed_nombre,
-        }));
+        sedes.value = data
+            .filter((sede) => sede.sed_activo === 1)
+            .map((sede) => ({
+                value: sede.id,
+                text: sede.sed_nombre,
+            }));
     } catch (error) {
         console.error("Error al cargar las sedes:", error);
     }
