@@ -12,9 +12,14 @@ class UsuarioController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function soporte()
     {
-        return Inertia::render("Admin/User");
+        return Inertia::render("Admin/Soporte");
+    }
+
+    public function docente()
+    {
+        return Inertia::render("Admin/Docente");
     }
 
     /**

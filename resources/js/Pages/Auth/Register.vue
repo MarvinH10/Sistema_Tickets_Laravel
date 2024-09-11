@@ -12,6 +12,10 @@ import Select from "@/Components/Select.vue";
 
 const sedes = ref([]);
 
+const isSedeValida = (value) => {
+    return sedes.value.some((sede) => sede.value === value);
+};
+
 const fetchSedes = async () => {
     try {
         const response = await fetch("/api/sedes");
@@ -130,6 +134,8 @@ const submit = () => {
                     id="sed_id"
                     v-model="form.sed_id"
                     :options="sedes"
+                    :disabled="sedes.length === 0"
+                    :validate="isSedeValida"
                     name="sed_id"
                     placeholder="Por favor seleccione una sede"
                     required
