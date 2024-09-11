@@ -34,6 +34,10 @@ Route::middleware([
         Route::delete('/soportes/{soporte}', 'destroySoporte');
         /** DOCENTE **/
         Route::get('/docente', 'docente')->name('docente');
+        Route::get('/docentes', 'traerDocente');
+        Route::post('/docentes', 'storeDocente');
+        Route::put('/docentes/{docente}', 'updateDocente');
+        Route::delete('/docentes/{docente}', 'destroyDocente');
     });
 
     Route::controller(TicketController::class)->group(function () {
