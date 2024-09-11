@@ -21,7 +21,13 @@ const errores = ref([]);
 
 const crearSede = async () => {
     try {
-        const response = await axios.post("/api/sedes", nuevaSede.value);
+        const response = await axios.post("/sedes", nuevaSede.value, {
+            headers: {
+                "X-CSRF-TOKEN": document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
+            },
+        });
         emit("crear", response.data);
 
         nuevaSede.value = {

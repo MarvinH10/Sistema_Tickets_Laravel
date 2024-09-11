@@ -12,9 +12,3 @@ Route::get('/user', function (Request $request) {
 Route::get('/sedes', function () {
     return Sede::all();
 });
-
-/** API SEDES **/
-Route::group(['prefix' => 'sedes'], function () {
-    Route::post('/', [SedeController::class, 'store']);
-    Route::delete('/{sede}', [SedeController::class, 'destroy']);
-});
