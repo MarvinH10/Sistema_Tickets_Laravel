@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Rol;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class UsuarioController extends Controller
@@ -92,9 +95,50 @@ class UsuarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function updateSoporte(Request $request, $id)
     {
-        //
+        try {
+            $user = User::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+                'celular' => 'required|string|max:30',
+                'sed_id' => 'required|exists:sedes,id',
+                'password' => 'nullable|string|min:8',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Hubo errores en la validación',
+                    'errors' => $validator->errors()->toArray(),
+                ], 422);
+            }
+
+            $data = $request->only(['name', 'email', 'celular', 'sed_id']);
+            if ($request->filled('password')) {
+                $data['password'] = bcrypt($request->password);
+            }
+
+            $user->update($data);
+
+            return response()->json([
+                'status' => true,
+                'msg' => 'Soporte Técnico actualizado correctamente',
+                'user' => $user
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Soporte técnico no encontrado'
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Error al actualizar el soporte técnico: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -111,12 +155,12 @@ class UsuarioController extends Controller
                 'status' => true,
                 'msg' => 'Soporte técnico desactivado exitosamente.',
             ], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status' => false,
                 'msg' => 'Soporte técnico no encontrado.',
             ], 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'status' => false,
                 'msg' => 'Ocurrió un error al desactivar el soporte técnico: ' . $e->getMessage(),

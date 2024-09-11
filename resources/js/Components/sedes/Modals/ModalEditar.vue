@@ -50,7 +50,6 @@ const editarSede = async () => {
                 },
             }
         );
-        // Emitimos el evento para actualizar la sede y cerramos el modal
         emit("update", response.data);
         cerrarEditarModal();
     } catch (error) {

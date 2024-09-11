@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
@@ -41,6 +41,7 @@ const abrirDropdownUsuarios = ref(false);
 
 const interactuarSidebar = () => {
     abrirSidebar.value = !abrirSidebar.value;
+    localStorage.setItem("sidebarAbierto", abrirSidebar.value);
 
     if (abrirSidebar.value) {
         setTimeout(() => {
@@ -63,6 +64,14 @@ const logout = () => {
     router.post(route("logout"));
 };
 
+onMounted(() => {
+    const sidebarEstado = localStorage.getItem("sidebarAbierto");
+    if (sidebarEstado !== null) {
+        abrirSidebar.value = JSON.parse(sidebarEstado);
+        mostrarTextoSidebar.value = abrirSidebar.value;
+    }
+});
+
 defineProps({
     title: String,
 });
@@ -75,22 +84,23 @@ defineProps({
         <Banner />
         <div class="flex min-h-screen bg-gray-100">
             <nav
-                class="transition-all duration-[200ms] ease-in-out bg-white border-r border-gray-100"
-                :class="abrirSidebar ? 'w-60' : 'w-30'"
+                class="transition-all duration-300 ease-in-out bg-white border-r shadow-md"
+                :class="abrirSidebar ? 'w-60' : 'w-20'"
             >
                 <div class="w-full py-4">
-                    <div class="flex items-center justify-center mb-4 shrink-0">
+                    <div class="flex items-center justify-center mb-6">
                         <Link :href="route('dashboard')">
                             <ApplicationMark class="block w-auto h-8" />
                         </Link>
                     </div>
+
                     <div class="flex flex-col">
                         <NavLink
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            class="flex items-center w-full h-12 px-4 space-x-2 transition-colors duration-300"
                             :class="{
-                                'bg-gray-200 text-gray-800 border-none':
+                                'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                     route().current('dashboard'),
                                 'text-gray-600 hover:bg-gray-100':
                                     !route().current('dashboard'),
@@ -101,14 +111,17 @@ defineProps({
                                 icon="tachometer-alt"
                                 class="text-lg"
                             />
-                            <span v-if="mostrarTextoSidebar">Dashboard</span>
+                            <span v-if="mostrarTextoSidebar" class="ml-2"
+                                >Dashboard</span
+                            >
                         </NavLink>
+
                         <NavLink
                             :href="route('sede')"
                             :active="route().current('sede')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            class="flex items-center w-full h-12 px-4 space-x-2 transition-colors duration-300"
                             :class="{
-                                'bg-gray-200 text-gray-800 border-none':
+                                'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                     route().current('sede'),
                                 'text-gray-600 hover:bg-gray-100':
                                     !route().current('sede'),
@@ -116,48 +129,54 @@ defineProps({
                             }"
                         >
                             <font-awesome-icon icon="city" class="text-lg" />
-                            <span v-if="mostrarTextoSidebar">Sedes</span>
+                            <span v-if="mostrarTextoSidebar" class="ml-2"
+                                >Sedes</span
+                            >
                         </NavLink>
+
                         <div>
                             <button
                                 @click="interactuarDropdownUsuarios"
-                                class="flex items-center w-full h-12 px-4 space-x-2 text-gray-800 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none"
+                                class="flex items-center w-full h-12 px-4 space-x-2 text-sm text-gray-900 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none"
                                 :class="{
                                     'justify-center': !abrirSidebar,
-                                    'bg-gray-200 text-gray-800 border-none':
+                                    'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                         route().current('soporte') ||
                                         route().current('docente'),
                                     'text-gray-600 hover:bg-gray-100':
-                                        !route().current('soporte') ||
-                                        route().current('docente'),
+                                        !route().current('soporte') &&
+                                        !route().current('docente'),
                                 }"
                             >
                                 <font-awesome-icon
                                     icon="users"
                                     class="text-lg"
                                 />
-                                <span v-if="mostrarTextoSidebar">Usuarios</span>
+                                <span v-if="mostrarTextoSidebar" class="ml-2"
+                                    >Usuarios</span
+                                >
                                 <font-awesome-icon
                                     :icon="
                                         abrirDropdownUsuarios
                                             ? 'chevron-up'
                                             : 'chevron-down'
                                     "
-                                    class="ml-auto"
+                                    class="ml-auto mr-2 transition-transform"
                                     v-if="abrirSidebar"
                                 />
                             </button>
+
                             <div
                                 v-if="abrirDropdownUsuarios"
-                                class="flex flex-col ml-4"
+                                class="flex flex-col ml-6"
                                 v-show="abrirSidebar"
                             >
                                 <NavLink
                                     :href="route('soporte')"
                                     :active="route().current('soporte')"
-                                    class="flex items-center w-full h-12 px-4 space-x-2"
+                                    class="flex items-center w-full h-12 px-4 space-x-2 transition-colors duration-300"
                                     :class="{
-                                        'bg-gray-200 text-gray-800 border-none':
+                                        'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                             route().current('soporte'),
                                         'text-gray-600 hover:bg-gray-100':
                                             !route().current('soporte'),
@@ -169,12 +188,13 @@ defineProps({
                                     />
                                     <span>Soportes Técnicos</span>
                                 </NavLink>
+
                                 <NavLink
                                     :href="route('docente')"
                                     :active="route().current('docente')"
-                                    class="flex items-center w-full h-12 px-4 space-x-2"
+                                    class="flex items-center w-full h-12 px-4 space-x-2 transition-colors duration-300"
                                     :class="{
-                                        'bg-gray-200 text-gray-800 border-none':
+                                        'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                             route().current('docente'),
                                         'text-gray-600 hover:bg-gray-100':
                                             !route().current('docente'),
@@ -188,12 +208,13 @@ defineProps({
                                 </NavLink>
                             </div>
                         </div>
+
                         <NavLink
                             :href="route('ticket')"
                             :active="route().current('ticket')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            class="flex items-center w-full h-12 px-4 space-x-2 transition-colors duration-300"
                             :class="{
-                                'bg-gray-200 text-gray-800 border-none':
+                                'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                     route().current('ticket'),
                                 'text-gray-600 hover:bg-gray-100':
                                     !route().current('ticket'),
@@ -201,14 +222,17 @@ defineProps({
                             }"
                         >
                             <font-awesome-icon icon="ticket" class="text-lg" />
-                            <span v-if="mostrarTextoSidebar">Tickets</span>
+                            <span v-if="mostrarTextoSidebar" class="ml-2"
+                                >Tickets</span
+                            >
                         </NavLink>
+
                         <NavLink
                             :href="route('aula')"
                             :active="route().current('aula')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            class="flex items-center w-full h-12 px-4 space-x-2 transition-colors duration-300"
                             :class="{
-                                'bg-gray-200 text-gray-800 border-none':
+                                'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                     route().current('aula'),
                                 'text-gray-600 hover:bg-gray-100':
                                     !route().current('aula'),
@@ -219,14 +243,17 @@ defineProps({
                                 icon="chalkboard"
                                 class="text-lg"
                             />
-                            <span v-if="mostrarTextoSidebar">Aulas</span>
+                            <span v-if="mostrarTextoSidebar" class="ml-2"
+                                >Aulas</span
+                            >
                         </NavLink>
+
                         <NavLink
                             :href="route('pabellon')"
                             :active="route().current('pabellon')"
-                            class="flex items-center w-full h-12 px-4 space-x-2"
+                            class="flex items-center w-full h-12 px-4 space-x-2 transition-colors duration-300"
                             :class="{
-                                'bg-gray-200 text-gray-800 border-none':
+                                'bg-blue-50 text-blue-600 border-l-4 border-blue-600':
                                     route().current('pabellon'),
                                 'text-gray-600 hover:bg-gray-100':
                                     !route().current('pabellon'),
@@ -237,11 +264,14 @@ defineProps({
                                 icon="building"
                                 class="text-lg"
                             />
-                            <span v-if="mostrarTextoSidebar">Pabellones</span>
+                            <span v-if="mostrarTextoSidebar" class="ml-2"
+                                >Pabellones</span
+                            >
                         </NavLink>
                     </div>
                 </div>
             </nav>
+
             <div class="flex flex-col flex-1">
                 <nav class="bg-white border-b border-gray-100">
                     <div
@@ -273,6 +303,7 @@ defineProps({
                                 />
                             </svg>
                         </button>
+
                         <div class="relative">
                             <Dropdown align="right" width="48">
                                 <template #trigger>
@@ -288,15 +319,16 @@ defineProps({
                                             "
                                             :alt="$page.props.auth.user.name"
                                         />
-                                        <span class="hidden ml-2 lg:block">
-                                            {{ $page.props.auth.user.name }}
-                                        </span>
+                                        <span class="hidden ml-2 lg:block">{{
+                                            $page.props.auth.user.name
+                                        }}</span>
                                         <font-awesome-icon
                                             icon="chevron-down"
                                             class="ml-2 text-gray-600"
                                         />
                                     </button>
                                 </template>
+
                                 <template #content>
                                     <DropdownLink :href="route('profile.show')"
                                         >Perfil</DropdownLink
@@ -319,11 +351,13 @@ defineProps({
                         </div>
                     </div>
                 </nav>
+
                 <header v-if="$slots.header" class="bg-white shadow">
                     <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         <slot name="header" />
                     </div>
                 </header>
+
                 <main class="flex-1 p-4">
                     <slot />
                 </main>
