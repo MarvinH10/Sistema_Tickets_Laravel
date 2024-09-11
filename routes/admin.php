@@ -26,7 +26,8 @@ Route::middleware([
     });
 
     Route::controller(UsuarioController::class)->group(function () {
-        Route::get('/usuario', 'index')->name('usuario');
+        Route::get('/soporte', 'soporte')->name('soporte');
+        Route::get('/docente', 'docente')->name('docente');
     });
 
     Route::controller(TicketController::class)->group(function () {

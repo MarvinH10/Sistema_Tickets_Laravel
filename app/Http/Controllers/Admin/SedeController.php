@@ -86,7 +86,7 @@ class SedeController extends Controller
      */
     public function destroy(Sede $sede)
     {
-        $sede->delete();
-        return response()->json(['message' => 'Sede eliminada correctamente'], 200);
+        $sede->update(['sed_activo' => 0]);
+        return response()->json(['message' => 'Sede desactivada correctamente'], 200);
     }
 }
