@@ -66,7 +66,7 @@ const eliminarSede = async () => {
             sedes.value = sedes.value.filter(
                 (sede) => sede.id !== sedeSeleccionada.value.id
             );
-            mostrarModalEliminarSede.value = false; // Cierra el modal después de eliminar
+            mostrarModalEliminarSede.value = false;
         } catch (error) {
             console.error("Error al eliminar la sede:", error);
         }
