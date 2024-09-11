@@ -32,6 +32,30 @@ const fetchSedes = async () => {
     }
 };
 
+const eliminarSede = async (id) => {
+    if (confirm("¿Estás seguro de que deseas eliminar esta sede?")) {
+        try {
+            const response = await fetch(`/api/sedes/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.ok) {
+                sedes.value = sedes.value.filter((sede) => sede.id !== id);
+            } else {
+                console.error(
+                    "Error al eliminar la sede:",
+                    response.statusText
+                );
+            }
+        } catch (error) {
+            console.error("Error al eliminar la sede:", error);
+        }
+    }
+};
+
 const abrirCrearSedeModal = () => {
     mostrarModalCrearSede.value = true;
 };
@@ -137,6 +161,13 @@ onMounted(() => {
                                 title="Editar"
                             >
                                 <i class="fas fa-edit"></i>
+                            </button>
+                            <button
+                                @click="eliminarSede(sede.id)"
+                                class="text-red-500 transition duration-300 hover:text-red-700"
+                                title="Eliminar"
+                            >
+                                <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     </tr>
