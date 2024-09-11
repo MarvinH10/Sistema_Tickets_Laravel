@@ -13,5 +13,8 @@ Route::get('/sedes', function () {
     return Sede::all();
 });
 
-Route::post('/sedes', [SedeController::class, 'store']);
-Route::delete('/sedes/{sede}', [SedeController::class, 'destroy']);
+/** API SEDES **/
+Route::group(['prefix' => 'sedes'], function () {
+    Route::post('/', [SedeController::class, 'store']);
+    Route::delete('/{sede}', [SedeController::class, 'destroy']);
+});

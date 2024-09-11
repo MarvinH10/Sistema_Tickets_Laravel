@@ -71,6 +71,7 @@ class SedeController extends Controller
      */
     public function destroy(Sede $sede)
     {
-        //
+        $sede->delete();
+        return response()->json(['message' => 'Sede eliminada correctamente'], 200);
     }
 }
