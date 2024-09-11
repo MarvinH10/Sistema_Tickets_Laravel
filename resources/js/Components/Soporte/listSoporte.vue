@@ -124,7 +124,7 @@ export default {
 </script>
 
 <template>
-    <div class="container p-6 main-container">
+    <div class="p-6">
         <h1 class="mb-4 text-2xl font-bold">Lista de Soportes Técnicos</h1>
 
         <!-- Barra de búsqueda -->

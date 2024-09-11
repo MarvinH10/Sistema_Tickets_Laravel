@@ -113,7 +113,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="w-full max-w-6xl p-4 mx-auto">
+    <div class="p-6">
         <h1 class="mb-6 text-2xl font-bold">Lista de Sedes</h1>
 
         <div class="flex items-center mb-4 space-x-4">
