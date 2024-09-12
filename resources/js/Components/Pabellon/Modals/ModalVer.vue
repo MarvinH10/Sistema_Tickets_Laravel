@@ -24,10 +24,8 @@ const cerrarDetallesModal = () => {
     >
         <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
             <h2 class="mb-4 text-xl font-bold">Detalles del Pabellón</h2>
-            <p><strong>Nombre:</strong> {{ pabellon.pab_nombre }}</p>
-            <p><strong>Dirección:</strong> {{ pabellon.pab_direccion }}</p>
-            <p><strong>Ciudad:</strong> {{ pabellon.pab_ciudad }}</p>
-            <p><strong>Teléfono:</strong> {{ pabellon.pab_telefono }}</p>
+            <p><strong>Pabellon:</strong> {{ pabellon.pab_nombre }}</p>
+            <p><strong>Sedes:</strong> {{ pabellon.sed_nombre }}</p>
             <button
                 @click="cerrarDetallesModal"
                 class="flex items-center px-2 py-2 mt-4 text-white transition-all duration-300 bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"

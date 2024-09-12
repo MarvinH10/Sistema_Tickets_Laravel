@@ -29,7 +29,7 @@ const crearPabellon = async () => {
 
         nuevoPabellon.value = {
             pab_nombre: "",
-            pab_estado: true,
+            pab_activo: true,
         };
         errores.value = [];
         emit("cerrar");

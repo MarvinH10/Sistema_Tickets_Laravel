@@ -35,9 +35,9 @@ class PabellonController extends Controller
     public function update(Request $request, Pabellon $pabellon)
     {
         $validarDatos = $request->validate([
-            'sed_id' => 'required|integer',
+            'sed_id' => 'required|exists:sedes,id',
             'pab_nombre' => 'required|string|max:255',
-            'pab_estado' => 'boolean',
+            'pab_activo' => 'boolean',
         ]);
 
         $pabellon->update($validarDatos);
@@ -47,7 +47,7 @@ class PabellonController extends Controller
 
     public function destroy(Pabellon $pabellon)
     {
-        $pabellon->update(['pab_estado' => false]);
+        $pabellon->update(['pab_activo' => 0]);
         return response()->json(['message' => 'Pabellón desactivado correctamente'], 200);
     }
 }

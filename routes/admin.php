@@ -49,6 +49,8 @@ Route::middleware([
         Route::get('/pabellon', 'index')->name('pabellon');
         Route::get('/pabellons', 'traer');
         Route::post('/pabellons', 'store');
+        Route::put('/pabellons/{pabellon}', 'update');
+        Route::delete('/pabellons/{pabellon}', 'destroy');
     });
 
     Route::controller(AulaController::class)->group(function () {

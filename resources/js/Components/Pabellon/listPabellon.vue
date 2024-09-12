@@ -37,6 +37,7 @@ const fetchPabellones = async () => {
                 id: pabellon.id,
                 pab_nombre: pabellon.pab_nombre,
                 sed_nombre: pabellon.sede.sed_nombre,
+                sed_id: pabellon.sed_id,
             }));
     } catch (error) {
         console.error("Error al cargar los pabellones:", error);
@@ -46,8 +47,8 @@ const fetchPabellones = async () => {
 const eliminarPabellon = async () => {
     if (pabellonSeleccionado.value) {
         try {
-            await axios.delete(`/pabellones/${pabellonSeleccionado.value.id}`);
-            pabellones.value = pabellones.value.filter(
+            await axios.delete(`/pabellons/${pabellonSeleccionado.value.id}`);
+            pabellons.value = pabellons.value.filter(
                 (pabellon) => pabellon.id !== pabellonSeleccionado.value.id
             );
             mostrarModalEliminarPabellon.value = false;

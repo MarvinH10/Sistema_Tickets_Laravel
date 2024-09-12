@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -13,11 +13,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["cerrar", "update"]);
-
+const sedes = ref([]);
 const nuevoPabellon = ref({
-    sed_id: null,
     pab_nombre: "",
-    pab_estado: true,
+    pab_activo: true,
+    sed_id:"",
 });
 
 watch(
@@ -25,9 +25,9 @@ watch(
     (newPabellon) => {
         if (newPabellon) {
             nuevoPabellon.value = {
-                sed_id: newPabellon.sed_id,
                 pab_nombre: newPabellon.pab_nombre,
-                pab_estado: newPabellon.pab_estado,
+                pab_activo: newPabellon.pab_activo,
+                sed_id: newPabellon.sed_id,
             };
         }
     },
@@ -37,7 +37,7 @@ watch(
 const editarPabellon = async () => {
     try {
         const response = await axios.put(
-            `/pabellones/${props.pabellon.id}`,
+            `/pabellons/${props.pabellon.id}`,
             nuevoPabellon.value,
             {
                 headers: {
@@ -58,9 +58,25 @@ const editarPabellon = async () => {
     }
 };
 
+const fetchSedes = async () => {
+    try {
+        const response = await axios.get("/sedes");
+        sedes.value = response.data.map((sede) => ({
+            value: sede.id,
+            text: sede.sed_nombre,
+        }));
+    } catch (error) {
+        console.error("Error al cargar las sedes:", error);
+    }
+};
+
 const cerrarEditarModal = () => {
     emit("cerrar");
 };
+
+onMounted(() => {
+    fetchSedes();
+});
 </script>
 
 <template>
@@ -76,19 +92,19 @@ const cerrarEditarModal = () => {
                 v-model="nuevoPabellon.pab_nombre"
                 class="w-full p-2 mb-4 border rounded"
             />
-            <label class="block mb-2">Sede ID:</label>
-            <input
-                type="number"
+            <label class="block mb-2">Seleccionar Sede:</label>
+            <select
                 v-model="nuevoPabellon.sed_id"
                 class="w-full p-2 mb-4 border rounded"
-            />
-            <label class="block mb-2">Estado:</label>
-            <select
-                v-model="nuevoPabellon.pab_estado"
-                class="w-full p-2 mb-4 border rounded"
             >
-                <option :value="true">Activo</option>
-                <option :value="false">Inactivo</option>
+                <option value="" disabled>Selecciona una sede</option>
+                <option
+                    v-for="sede in sedes"
+                    :key="sede.value"
+                    :value="sede.value"
+                >
+                    {{ sede.text }}
+                </option>
             </select>
             <div class="flex justify-end mt-6 space-x-4">
                 <button
