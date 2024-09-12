@@ -1,12 +1,12 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import listSedes from "@/Components/Sede/listSedes.vue";
+import listSedes from "@/Components/Admin/listSedes.vue";
 </script>
 
 <template>
     <AppLayout title="Sedes">
         <div class="py-68">
-                <listSedes />
+            <listSedes />
         </div>
     </AppLayout>
 </template>

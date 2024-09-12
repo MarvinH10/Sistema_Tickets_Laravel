@@ -47,14 +47,14 @@ const interactuarDropdown = () => (abrirDropdown.value = !abrirDropdown.value);
 const logout = () => router.post(route("logout"));
 
 const linkClasses = (isActive) => [
-    "flex items-center h-12 px-4 space-x-2 transition-colors duration-300",
+    "flex items-center h-12 px-4 space-x-2 transition-colors duration-100",
     abrirSidebar.value
         ? isActive
             ? "w-40 bg-gradient-to-r from-[#2EBAA1] to-green-400 text-white border-[#2EBAA1] rounded-r-full"
-            : "w-40 text-white hover:border-l-4"
+            : "w-40 text-white hover:border-l-4 hover:border-[#2EBAA1]"
         : isActive
         ? "w-full bg-gradient-to-r from-[#2EBAA1] to-green-400 text-white"
-        : "w-full text-white hover:border-l-4",
+        : "w-full text-white hover:border-l-4 hover:border-[#2EBAA1]",
     { "justify-center": !abrirSidebar.value },
 ];
 
@@ -75,7 +75,7 @@ defineProps({ title: String });
         <Banner />
         <div class="flex min-h-screen bg-white">
             <nav
-                class="transition-all duration-150 ease-in-out bg-[#222D32] shadow-md"
+                class="transition-all duration-160 ease-in-out bg-[#222D32] shadow-md"
                 :class="abrirSidebar ? 'w-48' : 'w-20'"
             >
                 <div class="w-full py-4">
