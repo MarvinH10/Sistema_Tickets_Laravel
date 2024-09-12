@@ -24,6 +24,9 @@ const filtrarPabellones = computed(() => {
         (pabellon) =>
             pabellon.pab_nombre
                 .toLowerCase()
+                .includes(buscarQuery.value.toLowerCase()) ||
+            pabellon.sed_nombre
+                .toLowerCase()
                 .includes(buscarQuery.value.toLowerCase())
     );
 });
@@ -106,7 +109,7 @@ onMounted(() => {
             <input
                 type="text"
                 v-model="buscarQuery"
-                placeholder="Buscar por nombre"
+                placeholder="Buscar por pabellón o sede"
                 class="flex-grow p-2 border border-gray-300 rounded-md"
             />
 
