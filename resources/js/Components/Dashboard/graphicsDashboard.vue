@@ -1,126 +1,68 @@
-<script>
-import { Pie, Bar } from 'vue-chartjs';
-import { Chart, registerables } from 'chart.js';
-
-Chart.register(...registerables);
-
-export default {
-  data() {
-    return {
-      tickets: [
-        { id: 1, titulo: "Problema con servidor", prioridad: "Alta", estado: "Abierto", fechaCreacion: "2024-09-01" },
-        { id: 2, titulo: "Error en base de datos", prioridad: "Media", estado: "Cerrado", fechaCreacion: "2024-09-02" },
-        { id: 3, titulo: "Solicitud de acceso", prioridad: "Baja", estado: "Abierto", fechaCreacion: "2024-09-03" },
-        { id: 4, titulo: "Actualización de sistema", prioridad: "Alta", estado: "Cerrado", fechaCreacion: "2024-09-04" },
-      ],
-    };
-  },
-  computed: {
-
-    estadoChartData() {
-      const ticketsAbiertos = this.tickets.filter(ticket => ticket.estado === 'Abierto').length;
-      const ticketsCerrados = this.tickets.filter(ticket => ticket.estado === 'Cerrado').length;
-
-      return {
-        labels: ['Abiertos', 'Cerrados'],
-        datasets: [
-          {
-            label: 'Tickets por Estado',
-            data: [ticketsAbiertos, ticketsCerrados],
-            backgroundColor: ['#fffff', '#EF4444'], // Verde para abiertos, rojo para cerrados
-          }
-        ]
-      };
-    },
-
-    prioridadChartData() {
-      const prioridadAlta = this.tickets.filter(ticket => ticket.prioridad === 'Alta').length;
-      const prioridadMedia = this.tickets.filter(ticket => ticket.prioridad === 'Media').length;
-      const prioridadBaja = this.tickets.filter(ticket => ticket.prioridad === 'Baja').length;
-
-      return {
-        labels: ['Alta', 'Media', 'Baja'],
-        datasets: [
-          {
-            label: 'Tickets por Prioridad',
-            data: [prioridadAlta, prioridadMedia, prioridadBaja],
-            backgroundColor: ['#F87171', '#FDBA74', '#34D399'],
-            borderColor: ['#E11D48', '#F97316', '#10B981'],
-            borderWidth: 1
-          }
-        ]
-      };
-    }
-  }
-};
-</script>
-
 <template>
-  <div class="dashboard-container p-6">
-    <h1 class="text-3xl font-bold mb-6">Dashboard del Sistema de Tickets</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <div class="bg-white shadow-lg p-6 rounded-lg chart-container">
-        <h2 class="text-2xl font-bold mb-4">Tickets por Estado</h2>
-      </div>
-      <div class="bg-white shadow-lg p-6 rounded-lg chart-container">
-        <h2 class="text-2xl font-bold mb-4">Tickets por Prioridad</h2>
+  <div class="dashboard-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+    <div class="bg-green-400 shadow-lg p-4 rounded-lg chart-container hover:shadow-xl hover:scale-105">
+      <div class="flex flex-col items-center justify-center h-full">
+        <i class="fas fa-ticket-alt text-white text-2xl mb-1"></i>
+        <h2 class="text-xl text-white font-bold mb-1">Asignados</h2>
+        <div class="number-display text-white text-3xl font-bold">120</div>
       </div>
     </div>
-    <h2 class="text-2xl font-bold mb-4">Lista de Tickets Recientes</h2>
-    <div class="bg-white shadow-lg p-4 rounded-lg">
-      <table class="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th class="py-2 text-left">ID</th>
-            <th class="py-2 text-left">Título</th>
-            <th class="py-2 text-left">Prioridad</th>
-            <th class="py-2 text-left">Estado</th>
-            <th class="py-2 text-left">Fecha de Creación</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="ticket in tickets" :key="ticket.id" class="border-t">
-            <td class="py-2">{{ ticket.id }}</td>
-            <td class="py-2">{{ ticket.titulo }}</td>
-            <td class="py-2">{{ ticket.prioridad }}</td>
-            <td :class="{ 'text-green-500': ticket.estado === 'Abierto', 'text-red-500': ticket.estado === 'Cerrado' }"
-              class="py-2">{{ ticket.estado }}</td>
-            <td class="py-2">{{ ticket.fechaCreacion }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="bg-yellow-400 shadow-lg p-4 rounded-lg chart-container hover:shadow-xl hover:scale-105">
+      <div class="flex flex-col items-center justify-center h-full">
+        <i class="fas fa-hourglass-half text-white text-2xl mb-1"></i>
+        <h2 class="text-xl text-white font-bold mb-1">Pendientes</h2>
+        <div class="number-display text-white text-3xl font-bold">45</div>
+      </div>
+    </div>
+    <div class="bg-blue-400 shadow-lg p-4 rounded-lg chart-container hover:shadow-xl hover:scale-105">
+      <div class="flex flex-col items-center justify-center h-full">
+        <i class="fas fa-spinner text-white text-2xl mb-1"></i>
+        <h2 class="text-xl text-white font-bold mb-1">En Progreso</h2>
+        <div class="number-display text-white text-3xl font-bold">30</div>
+      </div>
+    </div>
+    
+    <div class="bg-red-400 shadow-lg p-4 rounded-lg chart-container hover:shadow-xl hover:scale-105">
+      <div class="flex flex-col items-center justify-center h-full">
+        <i class="fas fa-exclamation-triangle text-white text-2xl mb-1"></i>
+        <h2 class="text-xl text-white font-bold mb-1">Urgentes</h2>
+        <div class="number-display text-white text-3xl font-bold">10</div>
+      </div>
+    </div>
+    <div class="bg-purple-400 shadow-lg p-4 rounded-lg chart-container hover:shadow-xl hover:scale-105">
+      <div class="flex flex-col items-center justify-center h-full">
+        <i class="fas fa-calendar-day text-white text-2xl mb-1"></i>
+        <h2 class="text-xl text-white font-bold mb-1">Hoy</h2>
+        <div class="number-display text-white text-3xl font-bold">20</div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .dashboard-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background-color: #f4f4f4;
-}
-
-tbody tr:hover {
-  background-color: #f9f9f9;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
 .chart-container {
-  position: relative;
-  height: 400px;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem; /* Ajusta el padding para hacer las tarjetas más pequeñas */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.number-display {
+  margin-top: 0.5rem; /* Ajusta el espacio entre el título y el número */
+}
+
+/* Efecto de hover */
+.chart-container:hover {
+  transform: scale(1.05); /* Aumenta ligeramente el tamaño de la tarjeta */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade una sombra más prominente */
 }
 </style>

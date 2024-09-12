@@ -1,152 +1,223 @@
-<script>
-export default {
-    data() {
-        return {
-            mostrarModal: false,
-            mostrarModalConfirmacion: false,
-            pabellonSeleccionado: null,
-            nuevoPabellon: {
-                nombre: ''
-            },
-            pabellones: [
-                { id: 1, nombre: 'Pabellón A' },
-                { id: 2, nombre: 'Pabellón B' },
-                { id: 3, nombre: 'Pabellón C' },
-            ],
-        };
-    },
-    methods: {
+<script setup>
+import { ref, onMounted, computed } from "vue";
+import ModalCrear from "./Modals/ModalCrear.vue";
+import ModalVer from "./Modals/ModalVer.vue";
+import ModalEditar from "./Modals/ModalEditar.vue";
+import ModalEliminar from "./Modals/ModalEliminar.vue";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import axios from "axios";
 
-        mostrarModalCrearPabellon() {
-            this.mostrarModal = true;
-            this.nuevoPabellon = { nombre: '' };
-        },
+library.add(faPlus);
 
-        cerrarModal() {
-            this.mostrarModal = false;
-        },
+const pabellons = ref([]);
+const buscarQuery = ref("");
+const mostrarModalCrearPabellon = ref(false);
+const mostrarModalDetallesPabellon = ref(false);
+const mostrarModalEditarPabellon = ref(false);
+const mostrarModalEliminarPabellon = ref(false);
+const pabellonSeleccionado = ref(null);
 
-        crearPabellon() {
-            const nuevo = {
-                id: this.pabellones.length + 1,
-                nombre: this.nuevoPabellon.nombre
-            };
-            this.pabellones.push(nuevo);
-            this.cerrarModal();
-        },
+const filtrarPabellones = computed(() => {
+    return pabellons.value.filter(
+        (pabellon) =>
+            pabellon.pab_nombre
+                .toLowerCase()
+                .includes(buscarQuery.value.toLowerCase())
+    );
+});
 
-        confirmarEliminacion(pabellon) {
-            this.pabellonSeleccionado = pabellon;
-            this.mostrarModalConfirmacion = true;
-        },
-        cerrarModalConfirmacion() {
-            this.mostrarModalConfirmacion = false;
-        },
+const fetchPabellones = async () => {
+    try {
+        const response = await axios.get("/pabellons");
+        pabellons.value = response.data
+            .filter((pabellon) => pabellon.pab_activo)
+            .map((pabellon) => ({
+                id: pabellon.id,
+                pab_nombre: pabellon.pab_nombre,
+                sed_nombre: pabellon.sede.sed_nombre,
+                sed_id: pabellon.sed_id,
+            }));
+    } catch (error) {
+        console.error("Error al cargar los pabellones:", error);
+    }
+};
 
-        eliminarPabellonConfirmado() {
-            this.pabellones = this.pabellones.filter(pabellon => pabellon.id !== this.pabellonSeleccionado.id);
-            this.cerrarModalConfirmacion();
-        },
-
-        mostrarModalEditarPabellon(pabellon) {
-            this.nuevoPabellon = { ...pabellon };
-            this.mostrarModal = true;
+const eliminarPabellon = async () => {
+    if (pabellonSeleccionado.value) {
+        try {
+            await axios.delete(`/pabellons/${pabellonSeleccionado.value.id}`);
+            pabellons.value = pabellons.value.filter(
+                (pabellon) => pabellon.id !== pabellonSeleccionado.value.id
+            );
+            mostrarModalEliminarPabellon.value = false;
+        } catch (error) {
+            console.error("Error al eliminar el pabellón:", error);
         }
     }
 };
+
+const abrirCrearPabellonModal = () => {
+    mostrarModalCrearPabellon.value = true;
+};
+
+const cerrarCrearPabellonModal = () => {
+    mostrarModalCrearPabellon.value = false;
+};
+
+const abrirDetallesModal = (pabellon) => {
+    pabellonSeleccionado.value = pabellon;
+    mostrarModalDetallesPabellon.value = true;
+};
+
+const cerrarDetallesModal = () => {
+    mostrarModalDetallesPabellon.value = false;
+};
+
+const abrirEditarModal = (pabellon) => {
+    pabellonSeleccionado.value = pabellon;
+    mostrarModalEditarPabellon.value = true;
+};
+
+const cerrarEditarModal = () => {
+    mostrarModalEditarPabellon.value = false;
+};
+
+const abrirEliminarModal = (pabellon) => {
+    pabellonSeleccionado.value = pabellon;
+    mostrarModalEliminarPabellon.value = true;
+};
+
+const cerrarEliminarModal = () => {
+    mostrarModalEliminarPabellon.value = false;
+};
+
+onMounted(() => {
+    fetchPabellones();
+});
 </script>
 
 <template>
-    <div class="container p-6">
-        <h1 class="text-2xl font-bold mb-6">Gestión de Pabellones</h1>
-        <div class="mb-4 flex justify-end">
-            <button @click="mostrarModalCrearPabellon"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
-                Crear Pabellón
+    <div class="p-6">
+        <h1 class="mb-6 text-2xl font-bold">Lista de Pabellones</h1>
+
+        <div class="flex items-center mb-4 space-x-4">
+            <input
+                type="text"
+                v-model="buscarQuery"
+                placeholder="Buscar por nombre"
+                class="flex-grow p-2 border border-gray-300 rounded-md"
+            />
+
+            <button
+                @click="abrirCrearPabellonModal"
+                class="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 bg-green-500 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+            >
+                <font-awesome-icon icon="plus" class="mr-2 text-lg" />
+                Crear Nuevo
             </button>
         </div>
-        <table class="min-w-full bg-white border">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 border">Pabellón</th>
-                    <th class="px-4 py-2 border">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="pabellon in pabellones" :key="pabellon.id" class="border-t">
-                    <td class="px-4 py-2 border">{{ pabellon.nombre }}</td>
-                    <td class="px-4 py-2 border">
-                        <div class="flex justify-center items-center space-x-2">
-                            <button @click="mostrarModalEditarPabellon(pabellon)"
-                                class="text-blue-500 hover:text-blue-700 transition duration-300">
+
+        <div class="overflow-x-auto">
+            <table
+                class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md"
+            >
+                <thead class="bg-gray-900 border-b border-gray-200">
+                    <tr>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-left text-white"
+                        >
+                            Pabellones
+                        </th>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-center text-white"
+                        >
+                            Sedes
+                        </th>
+                        <th
+                            class="px-4 py-3 text-sm font-medium text-center text-white"
+                        >
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="pabellon in filtrarPabellones"
+                        :key="pabellon.id"
+                        class="transition-colors duration-200 border-b"
+                    >
+                        <td class="px-4 py-3 text-sm text-gray-700">
+                            {{ pabellon.pab_nombre }}
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-700">
+                            {{ pabellon.sed_nombre }}
+                        </td>
+                        <td
+                            class="flex items-center justify-center py-3 space-x-3"
+                        >
+                            <button
+                                @click="abrirDetallesModal(pabellon)"
+                                class="text-blue-500 transition duration-300 hover:text-blue-700"
+                                title="Ver detalles"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button
+                                @click="abrirEditarModal(pabellon)"
+                                class="text-green-500 transition duration-300 hover:text-green-700"
+                                title="Editar"
+                            >
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button @click="confirmarEliminacion(pabellon)"
-                                class="text-red-500 hover:text-red-700 transition duration-300">
+                            <button
+                                @click="abrirEliminarModal(pabellon)"
+                                class="text-red-500 transition duration-300 hover:text-red-700"
+                                title="Eliminar"
+                            >
                                 <i class="fas fa-trash"></i>
                             </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div v-if="mostrarModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-                <h2 class="text-xl font-bold mb-4">Crear Nuevo Pabellón</h2>
-                <label class="block mb-2">Nombre del Pabellón:</label>
-                <input type="text" v-model="nuevoPabellon.nombre" class="border p-2 w-full rounded mb-4" />
-                <button @click="crearPabellon" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                    Crear
-                </button>
-                <button @click="cerrarModal" class="ml-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                    Cancelar
-                </button>
-            </div>
+                        </td>
+                    </tr>
+                    <tr v-if="filtrarPabellones.length === 0">
+                        <td
+                            colspan="2"
+                            class="px-4 py-3 text-sm text-center text-gray-500"
+                        >
+                            No se encontraron resultados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div v-if="mostrarModalConfirmacion"
-            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-                <h2 class="text-xl font-bold mb-4">¿Estás seguro?</h2>
-                <p>¿Estás seguro de que deseas eliminar el pabellón <strong>{{ pabellonSeleccionado.nombre }}</strong>?
-                </p>
-                <div class="mt-4 flex justify-end space-x-4">
-                    <button @click="eliminarPabellonConfirmado"
-                        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                        Sí, eliminar
-                    </button>
-                    <button @click="cerrarModalConfirmacion"
-                        class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
+
+        <ModalCrear
+            v-if="mostrarModalCrearPabellon"
+            @cerrar="cerrarCrearPabellonModal"
+            @crear="fetchPabellones"
+        />
+
+        <ModalVer
+            v-if="mostrarModalDetallesPabellon"
+            :pabellon="pabellonSeleccionado"
+            :mostrarModalDetallesPabellon="mostrarModalDetallesPabellon"
+            @close="cerrarDetallesModal"
+        />
+
+        <ModalEditar
+            v-if="mostrarModalEditarPabellon"
+            :pabellon="pabellonSeleccionado"
+            :mostrarModalEditarPabellon="mostrarModalEditarPabellon"
+            @cerrar="cerrarEditarModal"
+            @update="fetchPabellones"
+        />
+
+        <ModalEliminar
+            v-if="mostrarModalEliminarPabellon"
+            :pabellon="pabellonSeleccionado"
+            @cancelar="cerrarEliminarModal"
+            @confirmar="eliminarPabellon"
+        />
     </div>
 </template>
-
-<style scoped>
-.container {
-    max-width: 1200px;
-    margin: auto;
-}
-
-.space-x-2 {
-    gap: 0.5rem;
-}
-
-.flex {
-    display: flex;
-}
-
-.items-center {
-    align-items: center;
-}
-
-.justify-center {
-    justify-content: center;
-}
-
-.w-full {
-    width: 100%;
-}
-</style>
