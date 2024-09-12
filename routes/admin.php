@@ -25,6 +25,7 @@ Route::middleware([
         Route::delete('/sedes/{sede}', 'destroy');
     });
 
+
     Route::controller(UsuarioController::class)->group(function () {
         /** SOPORTE TÉCNICO **/
         Route::get('/soporte', 'soporte')->name('soporte');
@@ -46,6 +47,8 @@ Route::middleware([
 
     Route::controller(PabellonController::class)->group(function () {
         Route::get('/pabellon', 'index')->name('pabellon');
+        Route::get('/pabellons', 'traer');
+        Route::post('/pabellons', 'store');
     });
 
     Route::controller(AulaController::class)->group(function () {

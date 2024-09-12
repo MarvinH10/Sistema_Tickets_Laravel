@@ -9,59 +9,45 @@ use Inertia\Inertia;
 
 class PabellonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return Inertia::render('Admin/Pabellon');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function traer()
     {
-        //
+        $pabellones = Pabellon::with('sede')->where('pab_activo', true)->get();
+        return response()->json($pabellones);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validarDatos = $request->validate([
+            'pab_nombre' => 'required|string|max:255',
+            'sed_id' => 'required|exists:sedes,id',
+            'sed_activo' => 'boolean',
+        ]);
+
+        $pabellon = Pabellon::create($validarDatos);
+        return response()->json($pabellon, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pabellon $pabellon)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pabellon $pabellon)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Pabellon $pabellon)
     {
-        //
+        $validarDatos = $request->validate([
+            'sed_id' => 'required|integer',
+            'pab_nombre' => 'required|string|max:255',
+            'pab_estado' => 'boolean',
+        ]);
+
+        $pabellon->update($validarDatos);
+
+        return response()->json(['message' => 'Pabellón actualizado correctamente', 'pabellon' => $pabellon]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Pabellon $pabellon)
     {
-        //
+        $pabellon->update(['pab_estado' => false]);
+        return response()->json(['message' => 'Pabellón desactivado correctamente'], 200);
     }
 }
