@@ -56,7 +56,7 @@ export default {
 </script>
 
 <template>
-  <div class="dashboard-container p-6">
+  <div class="p-6">
     <h1 class="text-3xl font-bold mb-6">Dashboard del Sistema de Tickets</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <div class="bg-white shadow-lg p-6 rounded-lg chart-container">

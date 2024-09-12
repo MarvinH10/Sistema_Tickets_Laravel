@@ -57,7 +57,7 @@ export default {
 </script>
 
 <template>
-    <div class="container p-6">
+    <div class="p-6">
         <h1 class="text-2xl font-bold mb-6">Gestión de Pabellones</h1>
         <div class="mb-4 flex justify-end">
             <button @click="mostrarModalCrearPabellon"

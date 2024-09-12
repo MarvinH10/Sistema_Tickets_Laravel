@@ -113,7 +113,7 @@ export default {
 </script>
 
 <template>
-  <div class="container p-6 main-container">
+  <div class="p-6">
     <h1 class="text-2xl font-bold mb-6">Lista de Tickets</h1>
 
     <!-- Barra de búsqueda -->
@@ -272,15 +272,6 @@ export default {
 </template>
 
 <style scoped>
-.main-container {
-  max-width: 1600px;
-  padding: 20px;
-}
-
-.container {
-  max-width: 1200px;
-}
-
 .space-x-2 {
   gap: 0.5rem;
 }
