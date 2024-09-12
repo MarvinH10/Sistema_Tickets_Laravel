@@ -82,7 +82,7 @@ defineProps({
         <Head :title="title" />
 
         <Banner />
-        <div class="flex min-h-screen bg-gray-100">
+        <div class="flex min-h-screen bg-white">
             <nav
                 class="transition-all duration-500 ease-in-out bg-white border-r shadow-md"
                 :class="abrirSidebar ? 'w-60' : 'w-20'"
@@ -274,13 +274,13 @@ defineProps({
             </nav>
 
             <div class="flex flex-col flex-1">
-                <nav class="bg-white border-b border-gray-100">
+                <nav class="bg-[#2EBAA1] border-b border-white">
                     <div
                         class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8"
                     >
                         <button
                             @click="interactuarSidebar"
-                            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                            class="text-white hover:text-white focus:outline-none"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -320,12 +320,12 @@ defineProps({
                                             "
                                             :alt="$page.props.auth.user.name"
                                         />
-                                        <span class="hidden ml-2 lg:block">{{
+                                        <span class="hidden ml-2 lg:block text-white font-semibold">{{
                                             $page.props.auth.user.name
                                         }}</span>
                                         <font-awesome-icon
                                             icon="chevron-down"
-                                            class="ml-2 text-gray-600"
+                                            class="ml-2 text-white"
                                         />
                                     </button>
                                 </template>

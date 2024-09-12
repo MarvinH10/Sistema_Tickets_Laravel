@@ -7,7 +7,7 @@ library.add(faTimes);
 
 const props = defineProps({
     sede: Object,
-    mostrarModalDetallesSede: Boolean,
+    mostrarModalDetalles: Boolean,
 });
 
 const emit = defineEmits(["close"]);
@@ -19,7 +19,7 @@ const cerrarDetallesModal = () => {
 
 <template>
     <div
-        v-if="mostrarModalDetallesSede"
+        v-if="mostrarModalDetalles"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
         <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">

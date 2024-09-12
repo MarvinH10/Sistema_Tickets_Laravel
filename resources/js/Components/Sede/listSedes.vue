@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import Table from "../Table.vue";
 import ModalCrear from "./Modals/ModalCrear.vue";
 import ModalVer from "./Modals/ModalVer.vue";
 import ModalEditar from "./Modals/ModalEditar.vue";
@@ -13,11 +14,13 @@ library.add(faPlus);
 
 const sedes = ref([]);
 const buscarQuery = ref("");
-const mostrarModalCrearSede = ref(false);
-const mostrarModalDetallesSede = ref(false);
-const mostrarModalEditarSede = ref(false);
-const mostrarModalEliminarSede = ref(false);
+const mostrarModalCrear = ref(false);
+const mostrarModalDetalles = ref(false);
+const mostrarModalEditar = ref(false);
+const mostrarModalEliminar = ref(false);
 const sedeSeleccionada = ref(null);
+
+const headers = ["N°", "Nombre", "Dirección", "Ciudad", "Teléfono", "Estado"];
 
 const validatePhoneNumber = (telefono) => {
     const phone = telefono.toString();
@@ -46,13 +49,13 @@ const fetchSedes = async () => {
     try {
         const response = await axios.get("/sedes");
         sedes.value = response.data
-            .filter((sede) => sede.sed_activo === 1)
             .map((sede) => ({
                 id: sede.id,
                 sed_nombre: sede.sed_nombre,
                 sed_direccion: sede.sed_direccion,
                 sed_ciudad: sede.sed_ciudad,
                 sed_telefono: validatePhoneNumber(sede.sed_telefono),
+                sed_activo: sede.sed_activo,
             }));
     } catch (error) {
         console.error("Error al cargar las sedes:", error);
@@ -63,10 +66,8 @@ const eliminarSede = async () => {
     if (sedeSeleccionada.value) {
         try {
             await axios.delete(`/sedes/${sedeSeleccionada.value.id}`);
-            sedes.value = sedes.value.filter(
-                (sede) => sede.id !== sedeSeleccionada.value.id
-            );
-            mostrarModalEliminarSede.value = false;
+            await fetchSedes();
+            mostrarModalEliminar.value = false;
         } catch (error) {
             console.error("Error al eliminar la sede:", error);
         }
@@ -74,180 +75,75 @@ const eliminarSede = async () => {
 };
 
 const abrirCrearSedeModal = () => {
-    mostrarModalCrearSede.value = true;
+    mostrarModalCrear.value = true;
 };
 
 const cerrarCrearSedeModal = () => {
-    mostrarModalCrearSede.value = false;
+    mostrarModalCrear.value = false;
 };
 
 const abrirDetallesModal = (sede) => {
     sedeSeleccionada.value = sede;
-    mostrarModalDetallesSede.value = true;
+    mostrarModalDetalles.value = true;
 };
 
 const cerrarDetallesModal = () => {
-    mostrarModalDetallesSede.value = false;
+    mostrarModalDetalles.value = false;
 };
 
 const abrirEditarModal = (sede) => {
     sedeSeleccionada.value = sede;
-    mostrarModalEditarSede.value = true;
+    mostrarModalEditar.value = true;
 };
 
 const cerrarEditarModal = () => {
-    mostrarModalEditarSede.value = false;
+    mostrarModalEditar.value = false;
 };
+
 const abrirEliminarModal = (sede) => {
     sedeSeleccionada.value = sede;
-    mostrarModalEliminarSede.value = true;
+    mostrarModalEliminar.value = true;
 };
 
 const cerrarEliminarModal = () => {
-    mostrarModalEliminarSede.value = false;
+    mostrarModalEliminar.value = false;
 };
 
-onMounted(() => {
-    fetchSedes();
-});
+onMounted(() => fetchSedes());
 </script>
 
 <template>
     <div class="p-6">
-        <h1 class="mb-6 text-2xl font-bold">Lista de Sedes</h1>
+        <h1 class="mb-6 text-[20px] font-bold text-gray-500">Lista de Sedes</h1>
 
-        <div class="flex items-center mb-4 space-x-4">
-            <input
-                type="text"
-                v-model="buscarQuery"
-                placeholder="Buscar por nombre, dirección, ciudad o teléfono"
-                class="flex-grow p-2 border border-gray-300 rounded-md"
-            />
+        <div class="flex items-center justify-between mb-4">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                </span>
+                <input type="text" v-model="buscarQuery" placeholder="Buscar..."
+                    class="flex-grow pl-10 px-12 border border-gray-300 rounded-md placeholder-gray-400 focus:border-gray-400 focus:ring focus:ring-gray-400 focus:ring-opacity-5" />
+            </div>
 
-            <button
-                @click="abrirCrearSedeModal"
-                class="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 bg-green-500 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-            >
+            <button @click="abrirCrearSedeModal"
+                class="flex justify-center px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 bg-gradient-to-r from-[#2EBAA1] to-green-400 rounded-lg shadow-md hover:from-[#2EBAA1] hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-[#2EBAA1] focus:ring-opacity-50">
                 <font-awesome-icon icon="plus" class="mr-2 text-lg" />
-                Crear Nuevo
+                Nuevo
             </button>
         </div>
 
-        <div class="overflow-x-auto">
-            <table
-                class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md"
-            >
-                <thead class="bg-gray-900 border-b border-gray-200">
-                    <tr>
-                        <th
-                            class="px-4 py-3 text-sm font-medium text-left text-white"
-                        >
-                            Nombre
-                        </th>
-                        <th
-                            class="px-4 py-3 text-sm font-medium text-left text-white"
-                        >
-                            Dirección
-                        </th>
-                        <th
-                            class="px-4 py-3 text-sm font-medium text-left text-white"
-                        >
-                            Ciudad
-                        </th>
-                        <th
-                            class="px-4 py-3 text-sm font-medium text-left text-white"
-                        >
-                            Teléfono
-                        </th>
-                        <th
-                            class="px-4 py-3 text-sm font-medium text-center text-white"
-                        >
-                            Acciones
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="sede in filtrarSedes"
-                        :key="sede.id"
-                        class="transition-colors duration-200 border-b"
-                    >
-                        <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.sed_nombre }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.sed_direccion }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.sed_ciudad }}
-                        </td>
-                        <td class="px-4 py-3 text-sm text-gray-700">
-                            {{ sede.sed_telefono }}
-                        </td>
-                        <td
-                            class="flex items-center justify-center py-3 space-x-3"
-                        >
-                            <button
-                                @click="abrirDetallesModal(sede)"
-                                class="text-blue-500 transition duration-300 hover:text-blue-700"
-                                title="Ver detalles"
-                            >
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button
-                                @click="abrirEditarModal(sede)"
-                                class="text-green-500 transition duration-300 hover:text-green-700"
-                                title="Editar"
-                            >
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button
-                                @click="abrirEliminarModal(sede)"
-                                class="text-red-500 transition duration-300 hover:text-red-700"
-                                title="Eliminar"
-                            >
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr v-if="filtrarSedes.length === 0">
-                        <td
-                            colspan="5"
-                            class="px-4 py-3 text-sm text-center text-gray-500"
-                        >
-                            No se encontraron resultados.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <Table :headers="headers" :items="filtrarSedes" @view="abrirDetallesModal" @edit="abrirEditarModal"
+            @delete="abrirEliminarModal" />
 
-        <ModalCrear
-            v-if="mostrarModalCrearSede"
-            @cerrar="cerrarCrearSedeModal"
-            @crear="fetchSedes"
-        />
+        <ModalCrear v-if="mostrarModalCrear" @cerrar="cerrarCrearSedeModal" @crear="fetchSedes" />
 
-        <ModalVer
-            v-if="mostrarModalDetallesSede"
-            :sede="sedeSeleccionada"
-            :mostrarModalDetallesSede="mostrarModalDetallesSede"
-            @close="cerrarDetallesModal"
-        />
+        <ModalVer v-if="mostrarModalDetalles" :sede="sedeSeleccionada" :mostrarModalDetalles="mostrarModalDetalles"
+            @close="cerrarDetallesModal" />
 
-        <ModalEditar
-            v-if="mostrarModalEditarSede"
-            :sede="sedeSeleccionada"
-            :mostrarModalEditarSede="mostrarModalEditarSede"
-            @cerrar="cerrarEditarModal"
-            @update="fetchSedes"
-        />
+        <ModalEditar v-if="mostrarModalEditar" :sede="sedeSeleccionada" :mostrarModalEditar="mostrarModalEditar"
+            @cerrar="cerrarEditarModal" @update="fetchSedes" />
 
-        <ModalEliminar
-            v-if="mostrarModalEliminarSede"
-            :sede="sedeSeleccionada"
-            @cancelar="cerrarEliminarModal"
-            @confirmar="eliminarSede"
-        />
+        <ModalEliminar v-if="mostrarModalEliminar" :sede="sedeSeleccionada" @cancelar="cerrarEliminarModal"
+            @confirmar="eliminarSede" />
     </div>
 </template>
