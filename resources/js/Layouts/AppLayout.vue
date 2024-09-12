@@ -84,8 +84,9 @@ defineProps({
         <Banner />
         <div class="flex min-h-screen bg-gray-100">
             <nav
-                class="transition-all duration-300 ease-in-out bg-white border-r shadow-md"
+                class="transition-all duration-500 ease-in-out bg-white border-r shadow-md"
                 :class="abrirSidebar ? 'w-60' : 'w-20'"
+                style="transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);"
             >
                 <div class="w-full py-4">
                     <div class="flex items-center justify-center mb-6">
