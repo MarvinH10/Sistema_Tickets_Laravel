@@ -111,13 +111,8 @@ onMounted(() => {
 </script>
 
 <template>
-<<<<<<< HEAD
-    <div class="w-full max-w-6xl p-4 mx-auto">
-        <h1 class="mb-6 text-2xl font-bold">Lista de Soportes Técnicos</h1>
-=======
     <div class="p-6">
         <h1 class="mb-4 text-2xl font-bold">Lista de Soportes Técnicos</h1>
->>>>>>> ee0eb692edb8460499f5d408f011a9f37f1cfbb9
 
         <div class="flex items-center mb-4 space-x-4">
             <input
